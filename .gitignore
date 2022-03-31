@@ -1,0 +1,5 @@
+.idea
+.vscode
+__pycache__/
+*.html
+config.yaml

@@ -1,0 +1,21 @@
+mongodb:
+  db_host: 127.0.0.1
+  db_port: 27017
+
+sehuatang:
+  # 域名
+  domain_name: www.sehuatang.org
+  # 板块id
+  fid:
+    - 103
+    - 104
+  # 抓取页数
+  page_num: 10
+  # 抓取日期(格式: yyyy-mm-dd), 如果为空, 则抓取当前日期，支持正则匹配，可输入 yyyy-mm 抓取指定月份的所有日期
+  date: 2022-03-31
+
+proxy:
+  # 代理服务器
+  proxy_host: http://127.0.0.1:11223
+  # 是否使用代理
+  enable: true
