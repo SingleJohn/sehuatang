@@ -2,6 +2,9 @@
 
 import pymongo
 from config import get_config
+from log_util import TNLog
+
+log = TNLog()
 
 host = get_config("db_host")
 port = get_config("db_port")
@@ -32,7 +35,11 @@ def save_data(data_list, fid):
     collection = db[collection_name]
     tid_list = find_data_tid(collection_name, date)
     data_list_new = compare_data(data_list, tid_list)
-    collection.insert_many(data_list_new)
+    if len(data_list_new) > 0:
+        collection.insert_many(data_list_new)
+        log.info("保存数据成功")
+    else:
+        log.info("未查询到新数据")
 
 
 # 查询数据, 拿到已存在的数据id

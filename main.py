@@ -6,11 +6,10 @@ import re
 
 from mongo import save_data
 from config import get_config
+from log_util import TNLog
 
-# url: https://www.sehuatang.org/forum-103-1.html
-# url2: https://www.sehuatang.org/forum.php?mod=forumdisplay&fid=103&typeid=480&filter=typeid&typeid=480&page=2
-# $Env:http_proxy="http://127.0.0.1:11223";$Env:https_proxy="http://127.0.0.1:11223"
-# proxy = "http://127.0.0.1:11223"
+log = TNLog()
+
 
 # 获取帖子的id(访问板块)
 def get_plate_info(fid: int, page: int, proxy, date_time):
@@ -22,7 +21,7 @@ def get_plate_info(fid: int, page: int, proxy, date_time):
 
     :return: info_list
     """
-    print("get plate " + str(fid) + " page " + str(page))
+    log.info("get plate " + str(fid) + " page " + str(page))
     url = "https://www.sehuatang.org/forum.php"
     # 参数
     params = {
@@ -55,16 +54,13 @@ def get_plate_info(fid: int, page: int, proxy, date_time):
     return info_list
 
 
-# print(get_page_info())
-
-
 # 访问每个帖子的页面
 def get_page(tid, proxy):
     """
     :param tid: 帖子id
     """
     data = {}
-    print("get page " + tid)
+    log.info("get page " + tid)
     url = "https://www.sehuatang.org/forum.php?mod=viewthread&tid={}".format(tid)
     response = httpx.get(url, proxies=proxy)
     soup = bs4.BeautifulSoup(response.text, "html.parser")
@@ -97,18 +93,15 @@ def get_page(tid, proxy):
 def main():
     # 获取配置
     config = get_config()
-    # 获取板块id
     fid_list = config["sehuatang"]["fid"]
-    # 获取页码
     page_num = config["sehuatang"]["page_num"]
-    # 获取日期
     date_time = config["sehuatang"]["date"]
-    # print(type(date_time))
+
     if date_time is None:
         date_time = time.strftime("%Y-%m-%d", time.localtime())
     else:
         date_time = date_time.strftime("%Y-%m-%d")
-    # 代理服务器
+
     proxy_enable = config["proxy"]["proxy_enable"]
     if proxy_enable:
         proxy = config["proxy"]["proxy_host"]
@@ -116,13 +109,17 @@ def main():
         proxy = None
 
     # 循环抓取所有页面
-    info_list_all = []
     for fid in fid_list:
-
+        info_list_all = []
         for page in range(1, page_num + 1):
-            info_list = get_plate_info(fid, page, proxy, date_time)
-            info_list_all.extend(info_list)
-
+            try:
+                info_list = get_plate_info(fid, page, proxy, date_time)
+                info_list_all.extend(info_list)
+            except Exception as e:
+                log.error(e)
+                continue
+            finally:
+                continue
         data_list = []
         for i in info_list_all:
             try:
@@ -132,17 +129,19 @@ def main():
                 data["date"] = i["date"]
                 data["tid"] = i["tid"]
                 post_time = data["post_time"]
-                # 再次匹配发布时间（因为页面获取的时间可能不准确）
+                # 再次匹配发布时间（因为上级页面获取的时间可能不准确）
                 if re.match("^" + date_time, post_time):
                     data_list.append(data)
-                # data_list.append(data)
             except Exception as e:
-                print(e)
+                log.error(e)
                 continue
             finally:
                 continue
+        log.info("本次抓取的数据条数为：" + str(len(data_list)))
+        log.info("开始写入数据库")
         save_data(data_list, fid)
 
 
 if __name__ == "__main__":
     main()
+    # get_page("812274", proxy="http://127.0.0.1:11223")
