@@ -8,6 +8,10 @@ from logging.handlers import RotatingFileHandler
 dir = os.path.dirname(__file__)
 dir_time = time.strftime("%Y-%m-%d", time.localtime())
 
+if os.path.exists(dir + "/logs") is False:
+    os.mkdir(dir + "/logs")
+
+
 handlers = {
     logging.NOTSET: os.path.join(dir, "logs/notset.log"),
     logging.DEBUG: os.path.join(dir, "logs/debug.log"),

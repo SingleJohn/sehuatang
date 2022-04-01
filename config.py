@@ -20,13 +20,3 @@ def get_config(key=None):
                 return data[i][key]
     return None
 
-
-# def get_config(key):
-#     data = read_config("config.yaml")
-#     return data[key]
-
-
-if __name__ == "__main__":
-    print(get_config("domain_name000"))
-    print(get_config("domain_name"))
-    print(get_config())

@@ -8,7 +8,7 @@ log = TNLog()
 
 host = get_config("db_host")
 port = get_config("db_port")
-date = get_config("date").strftime("%Y-%m-%d")
+date = get_config("date").__str__()
 
 
 client = pymongo.MongoClient(host, port)
@@ -23,7 +23,7 @@ def get_plate_name(fid):
     elif fid == 37:
         return "asia_mosaic_originate"
     else:
-        return "test"
+        return "other"
 
 
 # 保存数据(已存在的数据不保存)
@@ -69,8 +69,3 @@ def compare_data(data_list, id_list):
         if i["tid"] not in id_list:
             data_list_new.append(i)
     return data_list_new
-
-
-# res = find_data_tid("zhongwen666", "2022-03-31")
-# print(res)
-# print(len(res))

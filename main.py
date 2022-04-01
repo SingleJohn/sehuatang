@@ -21,8 +21,8 @@ def get_plate_info(fid: int, page: int, proxy, date_time):
 
     :return: info_list
     """
-    log.info("get plate " + str(fid) + " page " + str(page))
-    url = "https://www.sehuatang.org/forum.php"
+    log.info("Crawl the plate " + str(fid) + " page number " + str(page))
+    url = "https://{}/forum.php".format(get_config("domain_name"))
     # 参数
     params = {
         "mod": "forumdisplay",
@@ -60,8 +60,10 @@ def get_page(tid, proxy):
     :param tid: 帖子id
     """
     data = {}
-    log.info("get page " + tid)
-    url = "https://www.sehuatang.org/forum.php?mod=viewthread&tid={}".format(tid)
+    log.info("Crawl the page " + tid)
+    url = "https://{}/forum.php?mod=viewthread&tid={}".format(
+        get_config("domain_name"), tid
+    )
     response = httpx.get(url, proxies=proxy)
     soup = bs4.BeautifulSoup(response.text, "html.parser")
     # 获取帖子的标题
@@ -100,7 +102,7 @@ def main():
     if date_time is None:
         date_time = time.strftime("%Y-%m-%d", time.localtime())
     else:
-        date_time = date_time.strftime("%Y-%m-%d")
+        date_time = date_time.__str__()
 
     proxy_enable = config["proxy"]["proxy_enable"]
     if proxy_enable:
@@ -144,4 +146,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # get_page("812274", proxy="http://127.0.0.1:11223")

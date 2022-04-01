@@ -7,10 +7,12 @@ sehuatang:
   domain_name: www.sehuatang.org
   # 板块id
   fid:
-    - 103
-    - 104
-  # 抓取页数
-  page_num: 10
+    - 103 # hd_chinese_subtitles
+    - 104 # vegan_with_mosaic
+    - 106 # asia_mosaic_originate
+
+  # 抓取页数，10代表1-10页，如抓取月份，建议数量写大一些
+  page_num: 5
   # 抓取日期(格式: yyyy-mm-dd), 如果为空, 则抓取当前日期，支持正则匹配，可输入 yyyy-mm 抓取指定月份的所有日期
   date: 2022-03-31
 
@@ -18,4 +20,4 @@ proxy:
   # 代理服务器
   proxy_host: http://127.0.0.1:11223
   # 是否使用代理
-  enable: true
+  proxy_enable: true
