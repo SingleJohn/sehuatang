@@ -14,7 +14,3 @@
 3. 当前功能基本够用，可能会改进的地方
    - 异步并发
    - 导出数据到 Excel
-
-如有问题，可发邮件至：
-
-Email: MaddenJohn@protonmail.com
