@@ -1,6 +1,8 @@
 mongodb:
   db_host: 127.0.0.1
   db_port: 27017
+  connection_string: "mongodb+srv://.........."
+  use_conn_str: false
 
 sehuatang:
   # 域名
@@ -9,7 +11,7 @@ sehuatang:
   fid:
     - 103 # hd_chinese_subtitles
     - 104 # vegan_with_mosaic
-    - 106 # asia_mosaic_originate
+    - 37 # asia_mosaic_originate
 
   # 抓取页数，10代表1-10页，如抓取月份，建议数量写大一些
   page_num: 5

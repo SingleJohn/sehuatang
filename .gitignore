@@ -2,5 +2,8 @@
 .vscode
 __pycache__/
 logs/
+dist/
+build/
+*.spec
 *.html
 config.yaml

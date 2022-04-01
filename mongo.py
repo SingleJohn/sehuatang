@@ -1,6 +1,7 @@
 # 连接mongodb
 
 import pymongo
+import time
 from config import get_config
 from log_util import TNLog
 
@@ -8,10 +9,18 @@ log = TNLog()
 
 host = get_config("db_host")
 port = get_config("db_port")
-date = get_config("date").__str__()
+date = get_config("date")
+if date is None:
+    date = time.strftime("%Y-%m-%d", time.localtime())
+else:
+    date = date.__str__()
 
+use_conn_str = get_config("use_conn_str")
+if use_conn_str:
+    client = pymongo.MongoClient(get_config("connection_string"))
+else:
+    client = pymongo.MongoClient(host, port)
 
-client = pymongo.MongoClient(host, port)
 db = client.sehuatang
 
 # 枚举，通过fid获取板块名称
