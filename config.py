@@ -14,8 +14,8 @@ def read_config(config_path):
 # 配置获取函数，支持二级配置，供其他模块调用
 def get_config(key=None):
     if key is None:
-        return read_config("config.yaml")
-    data = read_config("config.yaml")
+        return read_config(config_path)
+    data = read_config(config_path)
     if key in data:
         return data[key]
     else:
