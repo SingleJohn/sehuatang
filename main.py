@@ -35,6 +35,7 @@ def get_plate_info(fid: int, page: int, proxy, date_time):
     all = soup.find_all(id=re.compile("^normalthread_"))
     # 存放字典的列表
     info_list = []
+    tid_list = []
     for i in all:
         data = {}
         title_list = i.find("a", class_="s xst").get_text().split(" ")
@@ -50,7 +51,8 @@ def get_plate_info(fid: int, page: int, proxy, date_time):
         data["date"] = date.attrs["title"]
         data["tid"] = id
         info_list.append(data)
-    return info_list
+        tid_list.append(id)
+    return info_list, tid_list
 
 
 # 访问每个帖子的页面
@@ -59,7 +61,7 @@ def get_page(tid, proxy):
     :param tid: 帖子id
     """
     data = {}
-    log.info("Crawl the page " + tid)
+    # log.info("Crawl the page " + tid)
     url = "https://{}/forum.php?mod=viewthread&tid={}".format(
         get_config("domain_name"), tid
     )
@@ -112,15 +114,18 @@ def main():
     # 循环抓取所有页面
     for fid in fid_list:
         info_list_all = []
+        tid_list_all = []
         for page in range(1, page_num + 1):
             try:
-                info_list = get_plate_info(fid, page, proxy, date_time)
+                info_list, tid_list = get_plate_info(fid, page, proxy, date_time)
                 info_list_all.extend(info_list)
+                tid_list_all.extend(tid_list)
             except Exception as e:
                 log.error(e)
                 continue
             finally:
                 continue
+        log.info("即将开始爬取的页面 " + " ".join(tid_list_all))
         data_list = []
         for i in info_list_all:
             try:
@@ -134,6 +139,7 @@ def main():
                 if re.match("^" + date_time, post_time):
                     data_list.append(data)
             except Exception as e:
+                log.error("Crawl the page " + " ".join(list(i.values())) + " failed.")
                 log.error(e)
                 continue
             finally:
