@@ -31,6 +31,10 @@ def get_plate_name(fid):
         return "vegan_with_mosaic"
     elif fid == 37:
         return "asia_mosaic_originate"
+    elif fid == 36:
+        return "asia_codeless_originate"
+    elif fid == 39:
+        return "anime_originate"
     else:
         return "other"
 
