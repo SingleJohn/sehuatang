@@ -1,5 +1,4 @@
 import time
-from urllib import response
 import httpx
 import bs4
 import re
