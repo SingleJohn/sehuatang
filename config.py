@@ -1,8 +1,12 @@
 import yaml
+import os
+
+dir = os.path.dirname(__file__)
+config_path = os.path.join(dir, "config.yaml")
 
 # 读取配置文件
-def read_config(file_name):
-    with open(file_name, "r", encoding="utf-8") as f:
+def read_config(config_path):
+    with open(config_path, "r", encoding="utf-8") as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
     return data
 
