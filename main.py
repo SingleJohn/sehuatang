@@ -91,7 +91,7 @@ def get_page(tid, proxy):
     data["img"] = img_list
     data["magnet"] = magnet
     log.debug("Crawl the page " + tid)
-    log.debug(" ".join(list(data.values())))
+    log.debug(data.values())
     return data
 
 
