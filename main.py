@@ -52,6 +52,8 @@ def get_plate_info(fid: int, page: int, proxy, date_time):
         data["tid"] = id
         info_list.append(data)
         tid_list.append(id)
+    log.debug("Crawl the plate " + str(fid) + " page number " + str(page))
+    log.debug(" ".join(tid_list))
     return info_list, tid_list
 
 
@@ -87,6 +89,8 @@ def get_page(tid, proxy):
     data["post_time"] = post_time
     data["img"] = img_list
     data["magnet"] = magnet
+    log.debug("Crawl the page " + tid)
+    log.debug(" ".join(list(i.values())))
 
     return data
 
