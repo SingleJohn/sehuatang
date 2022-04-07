@@ -90,7 +90,7 @@ def get_page(tid, proxy):
     data["img"] = img_list
     data["magnet"] = magnet
     log.debug("Crawl the page " + tid)
-    log.debug(" ".join(list(i.values())))
+    log.debug(" ".join(list(data.values())))
 
     return data
 
@@ -113,6 +113,7 @@ def main():
     else:
         proxy = None
 
+    log.debug("日期: " + date_time)
     # 循环抓取所有页面
     for fid in fid_list:
         info_list_all = []
