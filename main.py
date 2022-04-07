@@ -67,7 +67,7 @@ def get_page(tid, proxy):
     url = "https://{}/?mod=viewthread&tid={}".format(get_config("domain_name"), tid)
     response = httpx.get(url, proxies=proxy)
     soup = bs4.BeautifulSoup(response.text, "html.parser")
-    log.warning("Crawl the soup " + soup)
+    # log.warning("Crawl the soup " + soup)
     # 获取帖子的标题
     title = soup.find("h1", class_="ts").find("span").get_text()
     # 发布时间
@@ -92,7 +92,6 @@ def get_page(tid, proxy):
     data["magnet"] = magnet
     log.debug("Crawl the page " + tid)
     log.debug(" ".join(list(data.values())))
-
     return data
 
 
