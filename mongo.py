@@ -50,7 +50,7 @@ def save_data(data_list, fid):
     data_list_new = compare_data(data_list, tid_list)
     if len(data_list_new) > 0:
         collection.insert_many(data_list_new)
-        log.info("保存数据成功")
+        log.info("保存数据成功, 共存入数据库{}条".format(len(data_list_new)))
     else:
         log.info("未查询到新数据")
 
