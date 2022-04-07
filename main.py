@@ -21,7 +21,7 @@ def get_plate_info(fid: int, page: int, proxy, date_time):
     :return: info_list
     """
     log.info("Crawl the plate " + str(fid) + " page number " + str(page))
-    url = "https://{}/forum.php".format(get_config("domain_name"))
+    url = "https://{}/".format(get_config("domain_name"))
     # 参数
     params = {
         "mod": "forumdisplay",
@@ -62,9 +62,7 @@ def get_page(tid, proxy):
     """
     data = {}
     # log.info("Crawl the page " + tid)
-    url = "https://{}/forum.php?mod=viewthread&tid={}".format(
-        get_config("domain_name"), tid
-    )
+    url = "https://{}/?mod=viewthread&tid={}".format(get_config("domain_name"), tid)
     response = httpx.get(url, proxies=proxy)
     soup = bs4.BeautifulSoup(response.text, "html.parser")
     # 获取帖子的标题
