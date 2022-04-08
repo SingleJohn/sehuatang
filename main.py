@@ -101,10 +101,10 @@ async def get_page(tid, proxy, f_info):
         data["magnet"] = magnet
         log.debug("Crawl the page " + tid)
         log.debug(data.values())
+        return data, f_info
     except Exception as e:
         log.error("Crawl the page " + tid + " failed.")
         log.error(e)
-    return data, f_info
 
 
 def main():
@@ -208,7 +208,8 @@ async def main2():
         for i in info_list_all:
             tasks.append(get_page(i["tid"], proxy, i))
         results = await asyncio.gather(*tasks)
-        for result in results:
+        results_new = [i for i in results if i is not None]
+        for result in results_new:
             data, i = result
             data["number"] = i["number"]
             data["title"] = i["title"]
