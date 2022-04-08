@@ -202,7 +202,7 @@ async def main2():
             info_list_all.extend(info_list)
             tid_list_all.extend(tid_list)
         log.info("即将开始爬取的页面 " + " ".join(tid_list_all))
-        print(tid_list_all)
+
         data_list = []
         tasks = []
         for i in info_list_all:
