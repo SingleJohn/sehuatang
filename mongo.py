@@ -23,6 +23,7 @@ else:
 
 db = client.sehuatang
 
+
 # 枚举，通过fid获取板块名称
 def get_plate_name(fid):
     if fid == 103:
@@ -86,7 +87,6 @@ def compare_data(data_list, id_list):
 
 # 筛选不存在的tids
 def compare_tid(tid_list, fid):
-
     collection_name = get_plate_name(fid)
     id_list = find_data_tid(collection_name, date)
 
