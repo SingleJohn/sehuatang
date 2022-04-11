@@ -82,3 +82,16 @@ def compare_data(data_list, id_list):
         if i["tid"] not in id_list:
             data_list_new.append(i)
     return data_list_new
+
+
+# 筛选不存在的tids
+def compare_tid(tid_list, fid):
+
+    collection_name = get_plate_name(fid)
+    id_list = find_data_tid(collection_name, date)
+
+    tid_list_new = []
+    for i in tid_list:
+        if i not in id_list:
+            tid_list_new.append(i)
+    return tid_list_new

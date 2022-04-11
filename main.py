@@ -4,7 +4,7 @@ import httpx
 import bs4
 import re
 
-from mongo import save_data
+from mongo import save_data, compare_tid
 from config import get_config
 from log_util import TNLog
 
@@ -162,6 +162,8 @@ def main():
             finally:
                 continue
         log.info("即将开始爬取的页面 " + " ".join(tid_list_all))
+        tid_list_all = compare_tid(tid_list_all, fid)
+        log.info("需要爬取的页面 " + " ".join(tid_list_all))
         data_list = []
         for i in info_list_all:
             try:
@@ -224,9 +226,17 @@ async def main2():
             tid_list_all.extend(tid_list)
         log.info("即将开始爬取的页面 " + " ".join(tid_list_all))
 
+        tid_list_new = compare_tid(tid_list_all, fid)
+        log.info("需要爬取的页面 " + " ".join(tid_list_new))
+
+        info_list_new = []
+        for info in info_list_all:
+            if info["tid"] in tid_list_new:
+                info_list_new.append(info)
+
         data_list = []
         tasks = []
-        for i in info_list_all:
+        for i in info_list_new:
             tasks.append(get_page(i["tid"], proxy, i))
         results = await asyncio.gather(*tasks)
         results_new = [i for i in results if i is not None]
