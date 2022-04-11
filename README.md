@@ -19,10 +19,11 @@
 4. 常见问题
    1. cloudflare 防护绕过
       - 可以使用 cloudflare 的 workers ，对网站进行反向代理，然后爬取域名设置为 workers 的域名即可
-      - workers 代码参考 ：production.js
+      - workers 代码参考 ：[production.js](./production.js)
 
 
 5. 其他
    - `main` 、 `dev` 分支都是过渡版本(应该不会再维护了)，最新版本为`async`分支
    - 一个公共的mongodb库(权限只读)
       - `mongodb+srv://readonly:cS9NSuiJ1ebHnUL0@cluster0.8mosa.mongodb.net/Cluster0?retryWrites=true&w=majority`
+   - 有使用问题可以提issues
