@@ -20,3 +20,8 @@
    1. cloudflare 防护绕过
       - 可以使用 cloudflare 的 workers ，对网站进行反向代理，然后爬取域名设置为 workers 的域名即可
       - workers 代码参考 ：production.js
+
+
+5. 其他
+   - 一个公共的mongodb库(权限只读)
+      - `mongodb+srv://readonly:cS9NSuiJ1ebHnUL0@cluster0.8mosa.mongodb.net/Cluster0?retryWrites=true&w=majority`
