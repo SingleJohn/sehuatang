@@ -23,5 +23,6 @@
 
 
 5. 其他
+   - `main` 、 `dev` 分支都是过渡版本(应该不会再维护了)，最新版本为`async`分支
    - 一个公共的mongodb库(权限只读)
       - `mongodb+srv://readonly:cS9NSuiJ1ebHnUL0@cluster0.8mosa.mongodb.net/Cluster0?retryWrites=true&w=majority`
