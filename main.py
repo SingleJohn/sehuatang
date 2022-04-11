@@ -37,6 +37,7 @@ async def get_plate_info(fid: int, page: int, proxy: str, date_time: str):
     response = httpx.get(url, params=params, proxies=proxy)
     # 使用bs4解析
     soup = bs4.BeautifulSoup(response.text, "html.parser")
+    # print(soup)
     all = soup.find_all(id=re.compile("^normalthread_"))
     try:
         for i in all:
@@ -45,13 +46,26 @@ async def get_plate_info(fid: int, page: int, proxy: str, date_time: str):
             number = title_list[0]
             title_list.pop(0)
             title = " ".join(title_list)
-            date = i.find("span", attrs={"title": re.compile("^" + date_time)})
+            # date = i.find("span", attrs={"title": re.compile("^" + date_time)})
+            date_td_em = i.find("td", class_="by").find("em")
+            date_span = date_td_em.find(
+                "span", attrs={"title": re.compile("^" + date_time)}
+            )
+            if date_span is not None:
+                date = date_span.attrs["title"]
+            else:
+                flag = date_td_em.get_text().startswith(date_time)
+                if flag:
+                    date = date_td_em.get_text()
+                else:
+                    continue
+            # print(date)
             if date is None:
                 continue
             id = i.find(class_="showcontent y").attrs["id"].split("_")[1]
             data["number"] = number
             data["title"] = title
-            data["date"] = date.attrs["title"]
+            data["date"] = date
             data["tid"] = id
             info_list.append(data)
             tid_list.append(id)
@@ -89,12 +103,19 @@ async def get_page(tid, proxy, f_info):
         # 磁力链接
         magnet = soup.find("div", class_="blockcode").find("li").get_text()
         # 发布时间
-        post_time = (
-            soup.find("img", class_="authicn vm")
-            .parent.find("em")
-            .find("span")
-            .attrs["title"]
-        )
+        # post_time = (
+        #     soup.find("img", class_="authicn vm")
+        #     .parent.find("em")
+        #     .find("span")
+        #     .attrs["title"]
+        # )
+        post_time_em = soup.find("img", class_="authicn vm").parent.find("em")
+        post_time_span = post_time_em.find("span")
+        if post_time_span is not None:
+            post_time = post_time_span.attrs["title"]
+        else:
+            post_time = post_time_em.get_text()[4:]
+
         data["title"] = title
         data["post_time"] = post_time
         data["img"] = img_list
@@ -228,3 +249,6 @@ if __name__ == "__main__":
     # main()
     asyncio.run(main2())
     # asyncio.get_event_loop().run_until_complete(main2())
+    # get_plate_info("103", 5, "http://127.0.0.1:11223", "2022-03")
+    # get_page("819398", "http://127.0.0.1:11223", 2333)
+
