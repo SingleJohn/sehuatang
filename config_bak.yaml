@@ -9,9 +9,12 @@ sehuatang:
   domain_name: www.sehuatang.org
   # 板块id
   fid:
-    - 103 # hd_chinese_subtitles
-    - 104 # vegan_with_mosaic
-    - 37 # asia_mosaic_originate
+    - 103 # 高清中文字幕
+    - 104 # 素人有码系列
+    - 37 # 亚洲有码原创
+    - 36 # 亚洲无码原创
+    - 39 # 动漫原创
+    - 160 # VR
 
   # 抓取页数，10代表1-10页，如抓取月份，建议数量写大一些
   page_num: 5

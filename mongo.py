@@ -36,6 +36,8 @@ def get_plate_name(fid):
         return "asia_codeless_originate"
     elif fid == 39:
         return "anime_originate"
+    elif fid == 160:
+        return "vr_video"
     else:
         return "other"
 
