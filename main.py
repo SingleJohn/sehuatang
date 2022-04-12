@@ -252,6 +252,7 @@ async def main2():
                 data_list.append(data)
         log.info("本次抓取的数据条数为：" + str(len(data_list)))
         log.info("开始写入数据库")
+        data_list.reverse()
         save_data(data_list, fid)
 
 
