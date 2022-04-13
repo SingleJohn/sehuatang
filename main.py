@@ -226,13 +226,8 @@ async def main2():
             tid_list_all.extend(tid_list)
         log.info("即将开始爬取的页面 " + " ".join(tid_list_all))
 
-        tid_list_new = compare_tid(tid_list_all, fid)
+        tid_list_new, info_list_new = compare_tid(tid_list_all, fid, info_list_all)
         log.info("需要爬取的页面 " + " ".join(tid_list_new))
-
-        info_list_new = []
-        for info in info_list_all:
-            if info["tid"] in tid_list_new:
-                info_list_new.append(info)
 
         data_list = []
         tasks = []

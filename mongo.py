@@ -38,6 +38,8 @@ def get_plate_name(fid):
         return "anime_originate"
     elif fid == 160:
         return "vr_video"
+    elif fid == 151:
+        return "4k_video"
     else:
         return "other"
 
@@ -88,7 +90,7 @@ def compare_data(data_list, id_list):
 
 
 # 筛选不存在的tids
-def compare_tid(tid_list, fid):
+def compare_tid(tid_list, fid, info_list):
     collection_name = get_plate_name(fid)
     id_list = find_data_tid(collection_name, date)
 
@@ -96,4 +98,20 @@ def compare_tid(tid_list, fid):
     for i in tid_list:
         if i not in id_list:
             tid_list_new.append(i)
-    return tid_list_new
+
+    temp = []
+    for item in tid_list_new:
+        if item not in temp:
+            temp.append(item)
+
+    info_list_new = []
+    for info in info_list:
+        if info["tid"] in temp:
+            info_list_new.append(info)
+
+    temp2 = []
+    for item in info_list_new:
+        if item not in temp2:
+            temp2.append(item)
+
+    return temp, temp2  # 返回去重后的结果
