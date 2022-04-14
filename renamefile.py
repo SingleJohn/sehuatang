@@ -29,9 +29,6 @@ def get_mongo_info():
     db = client.sehuatang
     collection = db.hd_chinese_subtitles
     res = collection.find({}, {"_id": 0, "number": 1, "title": 1}).sort("_id", pymongo.DESCENDING).limit(50)
-    list_res = []
-    for i in res:
-        list_res.append(i)
 
     return res
 
