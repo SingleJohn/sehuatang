@@ -21,6 +21,8 @@ if use_conn_str:
 else:
     client = pymongo.MongoClient(host, port)
 
+send_context_str = "本次抓取的结果如下：\n"
+
 db = client.sehuatang
 
 
@@ -55,8 +57,11 @@ def save_data(data_list, fid):
     data_list_new = compare_data(data_list, tid_list)
     if len(data_list_new) > 0:
         collection.insert_many(data_list_new)
+        send_context(data_list_new, collection_name)
         log.info("保存数据成功, 共存入数据库{}条".format(len(data_list_new)))
     else:
+        send_context_str += "\n " + collection_name + ":\n"
+        send_context_str += "没有新数据\n"
         log.info("未查询到新数据")
 
 
@@ -115,3 +120,20 @@ def compare_tid(tid_list, fid, info_list):
             temp2.append(item)
 
     return temp, temp2  # 返回去重后的结果
+
+
+def send_context(data_list, collection_name):
+    global send_context_str
+
+    send_context_str += "\n " + collection_name + ":\n"
+
+    for i in data_list:
+        # send_context_str.join(i["number"] + " " + i["title"] + "\n")
+        send_context_str += i["number"] + " " + i["title"] + "\n"
+    # send_context_str.join(len(data_list).__str__() + "条\n")
+    send_context_str += len(data_list).__str__() + "条\n"
+
+
+def get_send_context():
+    global send_context_str
+    return send_context_str

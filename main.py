@@ -7,6 +7,7 @@ import re
 from mongo import save_data, compare_tid
 from config import get_config
 from log_util import TNLog
+from sendMessage import SendMessage
 
 log = TNLog()
 
@@ -249,6 +250,14 @@ async def main2():
         log.info("开始写入数据库")
         # data_list.reverse()
         save_data(data_list, fid)
+    if get_config("send_enable"):
+        send_message()
+
+
+def send_message():
+    wecom = SendMessage()
+    from mongo import get_send_context
+    wecom.send_message("色花堂抓取结果", get_send_context(), "mpnews")
 
 
 if __name__ == "__main__":
