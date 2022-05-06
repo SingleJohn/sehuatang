@@ -41,3 +41,7 @@ sendMessage:
   media_id: 295VYZ-98zQiMRZGKJalXz-JoJxilmtKEXS39ZP1Gds0shxWYHJgtpPX6A8QloKim
   # 接收的用户，多个用户用|分隔(如: use1|user2|user3)
   to_user: "@all"
+  # telegram 推送
+  send_telegram_enable: true
+  tg_bot_token: 5307534341:AAF3GkEYSy_6b23ui2w4zXC7mmLdDWeo2Zw
+  tg_chat_id: -704144096
