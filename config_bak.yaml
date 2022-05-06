@@ -26,3 +26,18 @@ proxy:
   proxy_host: http://127.0.0.1:11223
   # 是否使用代理
   proxy_enable: true
+
+# 推送配置，详情可参考企业微信开发者文档
+sendMessage:
+  # 是否发送消息
+  send_enable: true
+  # 企业ID
+  corp_id: wwe14538319d196cfa
+  # 应用的凭证密钥
+  corp_secret: Q5AQS5rttyaJ1-1nz6k2hIfjldiUi_Wg8v1hkT8bgn0
+  # 应用ID
+  agent_id: 1000002
+  # mpnews消息类型页面图片media_id，需要提前将图片上传到企业微信素材库，接口返回media_id，不填则默认发文本消息
+  media_id: 295VYZ-98zQiMRZGKJalXz-JoJxilmtKEXS39ZP1Gds0shxWYHJgtpPX6A8QloKim
+  # 接收的用户，多个用户用|分隔(如: use1|user2|user3)
+  to_user: "@all"
