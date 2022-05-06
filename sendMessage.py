@@ -1,10 +1,13 @@
 # python3
 # -*- coding: utf-8 -*-
-import requests
-import time
+from time import sleep
+
+import httpx
 import json
 import config
+from log_util import TNLog
 
+log = TNLog()
 
 
 class SendMessage:
@@ -19,7 +22,7 @@ class SendMessage:
         """获取鉴权token"""
         url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken"
         params = {"corpid": self.corp_id, "corpsecret": self.app_secret}
-        res = requests.get(url, params).json()
+        res = httpx.get(url, params=params).json()
         # config.set_config("wework", "access_token", res["access_token"])
         # config.set_config("wework", "update_time", str(time.time()))
         self.access_token = res["access_token"]
@@ -29,7 +32,7 @@ class SendMessage:
             return
         url = "https://qyapi.weixin.qq.com/cgi-bin/agent/list"
         params = {"access_token": config.get_config("wework", "access_token")}
-        res = requests.get(url, params).json()
+        res = httpx.get(url, params=params).json()
         config.set_config("wework", "agent_id", str(res["agentlist"][0]["agentid"]))
         config.set_config("wework", "agent_name", res["agentlist"][0]["name"])
 
@@ -39,7 +42,7 @@ class SendMessage:
     #         "access_token": config.get_config("wework", "access_token"),
     #         "agentid": config.get_config("wework", "agent_id"),
     #     }
-    #     res = requests.get(url, params).json()
+    #     res = httpx.get(url, params).json()
     #     config.set_config("wework", "agent_name", res["name"])
     #     config.set_config("wework", "agent_id", res["agentid"])
     #     # print(res)
@@ -94,7 +97,7 @@ class SendMessage:
     def send_request(self, data):
         send_msgs = bytes(json.dumps(data), "utf-8")
         params = {"access_token": self.access_token}
-        res = requests.post(self.send_url, params=params, data=send_msgs).json()
+        res = httpx.post(self.send_url, params=params, data=send_msgs).json()
         if res["errcode"] == 0:
             return True, res["errmsg"]
         else:
@@ -120,11 +123,93 @@ class SendMessage:
             self.send_mpnews_message(title, content, touser)
 
 
+def send_telegram_request(content: str):
+    proxy_enable = config.get_config("proxy_enable")
+    if proxy_enable:
+        proxy = config.get_config("proxy_host")
+    else:
+        proxy = None
+    url = "https://api.telegram.org/bot{}/sendMessage".format(
+        config.get_config("tg_bot_token")
+    )
+    data = {
+        "chat_id": config.get_config("tg_chat_id"),
+        "text": content,
+        "parse_mode": "markdownV2",
+        "disable_notification": True,
+    }
+    res = httpx.post(url, data=data, proxies=proxy).json()
+    # print(res)
+    if res["ok"]:
+        return
+    else:
+        log.error(data)
+        log.error("send telegram message error: {}".format(res))
+
+
+def send_tg(data_list, fid):
+    if config.get_config("tg_bot_token") is None:
+        log.info("tg_bot_token is None")
+        return
+    if config.get_config("tg_chat_id") is None:
+        log.info("tg_chat_id is None")
+        return
+    tag_name = get_chinese_name(fid)
+    for data in data_list:
+        magnet = data["magnet"]
+        title = data["title"]
+        num = data["number"]
+        post_time = data["post_time"]
+        image_str = data["img"][0]
+        old_strs = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' ]
+        new_strs = ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!' ]
+
+        content = f"{num} {title}\n\n{magnet}\n\n发布时间：{post_time} \n{image_str}\n\n #{tag_name}"
+        # 替换特殊字符
+        for i in range(len(old_strs)):
+            content = content.replace(old_strs[i], new_strs[i])
+        send_telegram_request(content)
+        sleep(3)
+
+
+def get_chinese_name(fid):
+    if fid == 103:
+        return "高清中文字幕"
+    elif fid == 104:
+        return "素人有码系列"
+    elif fid == 37:
+        return "亚洲有码原创"
+    elif fid == 36:
+        return "亚洲无码原创"
+    elif fid == 39:
+        return "动漫原创"
+    elif fid == 160:
+        return "vr"
+    elif fid == 151:
+        return "4k"
+    else:
+        return "other"
+
+
 def main():
-    wework = SendMessage()
+    # wework = SendMessage()
     # wework.get_access_token()
-    wework.send_message("测试54321", "测试666", "mpnews")
+    # wework.send_message("测试54321", "测试666", "mpnews")
     # wework.get_application_info()
+    # content = '[图片](https://i.imgur.com/KaiskSW.jpeg)\n[图片2](https://i.imgur.com/KaiskSW.jpeg)'
+
+    content = """
+    <a href="https://i.imgur.com/KaiskSW.jpeg"> </a>
+    <a href="https://i.imgur.com/u31nq0Q.jpeg"> </a>
+    <b>bold</b>, <strong>bold</strong>
+    <i>italic</i>, <em>italic</em>
+    <pre><code class="language-python">pre-formatted fixed-width code block written in the Python programming language</code></pre>
+    """
+
+    send_telegram_request(content)
+
+
+    # send_tg(datalist, 103)
 
 
 if __name__ == "__main__":

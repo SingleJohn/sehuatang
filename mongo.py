@@ -48,22 +48,24 @@ def get_plate_name(fid):
 
 # 保存数据(已存在的数据不保存)
 def save_data(data_list, fid):
-    """
-    :param data: 字典
-    """
     collection_name = get_plate_name(fid)
     collection = db[collection_name]
-    tid_list = find_data_tid(collection_name, date)
-    data_list_new = compare_data(data_list, tid_list)
-    if len(data_list_new) > 0:
-        collection.insert_many(data_list_new)
-        send_context(data_list_new, collection_name)
-        log.info("保存数据成功, 共存入数据库{}条".format(len(data_list_new)))
+    if len(data_list) > 0:
+        collection.insert_many(data_list)
+        send_context(data_list, collection_name)
+        log.info("保存数据成功, 共存入数据库{}条".format(len(data_list)))
     else:
         global send_context_str
         send_context_str += "\n " + collection_name + ":\n"
         send_context_str += "没有新数据\n"
         log.info("未查询到新数据")
+
+
+def filter_data(data_list, fid):     # 过滤数据
+    collection_name = get_plate_name(fid)
+    tid_list = find_data_tid(collection_name, date)
+    data_list_new = compare_data(data_list, tid_list)
+    return data_list_new
 
 
 # 查询数据, 拿到已存在的数据id

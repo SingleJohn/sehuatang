@@ -4,10 +4,10 @@ import httpx
 import bs4
 import re
 
-from mongo import save_data, compare_tid
+from mongo import save_data, compare_tid, filter_data
 from config import get_config
 from log_util import TNLog
-from sendMessage import SendMessage
+from sendMessage import SendMessage, send_tg
 
 log = TNLog()
 
@@ -249,8 +249,12 @@ async def main2():
         log.info("本次抓取的数据条数为：" + str(len(data_list)))
         log.info("开始写入数据库")
         # data_list.reverse()
-        save_data(data_list, fid)
-    if get_config("send_enable"):
+        data_list_new = filter_data(data_list, fid)
+        save_data(data_list_new, fid)
+        if get_config("send_telegram_enable"):
+            send_tg(data_list_new, fid)
+
+    if get_config("send_wecom_enable"):
         send_message()
 
 
