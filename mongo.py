@@ -60,6 +60,7 @@ def save_data(data_list, fid):
         send_context(data_list_new, collection_name)
         log.info("保存数据成功, 共存入数据库{}条".format(len(data_list_new)))
     else:
+        global send_context_str
         send_context_str += "\n " + collection_name + ":\n"
         send_context_str += "没有新数据\n"
         log.info("未查询到新数据")
