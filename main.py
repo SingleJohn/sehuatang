@@ -1,5 +1,6 @@
 import asyncio
 import time
+import random
 import httpx
 import bs4
 import re
@@ -266,6 +267,8 @@ def send_message():
 
 if __name__ == "__main__":
     # main()
+    # 随机延时
+    time.sleep(random.randint(10, 300))
     asyncio.run(main2())
     # asyncio.get_event_loop().run_until_complete(main2())
     # get_plate_info("103", 5, "http://127.0.0.1:11223", "2022-03")
