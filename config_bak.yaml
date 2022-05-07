@@ -30,18 +30,18 @@ proxy:
 # 推送配置，详情可参考企业微信开发者文档
 sendMessage:
   # 是否发送消息
-  send_enable: true
+  send_wecom_enable: true
   # 企业ID
-  corp_id: wwe14538319d196cfa
+  corp_id: wwe1**********fa
   # 应用的凭证密钥
-  corp_secret: Q5AQS5rttyaJ1-1nz6k2hIfjldiUi_Wg8v1hkT8bgn0
+  corp_secret: Q5A************************n0
   # 应用ID
-  agent_id: 1000002
+  agent_id: 10****2
   # mpnews消息类型页面图片media_id，需要提前将图片上传到企业微信素材库，接口返回media_id，不填则默认发文本消息
-  media_id: 295VYZ-98zQiMRZGKJalXz-JoJxilmtKEXS39ZP1Gds0shxWYHJgtpPX6A8QloKim
+  media_id: 2******************************im
   # 接收的用户，多个用户用|分隔(如: use1|user2|user3)
   to_user: "@all"
   # telegram 推送
   send_telegram_enable: true
-  tg_bot_token: 5307534341:AAF3GkEYSy_6b23ui2w4zXC7mmLdDWeo2Zw
-  tg_chat_id: -704144096
+  tg_bot_token: 5307***************************o2Zw
+  tg_chat_id: -7*********6

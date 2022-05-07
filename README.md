@@ -12,7 +12,7 @@
    - 判断数据是否存在，存在则跳过
    - 异步并发
    - 推送到企业微信
-   - 推送到telegram（带封面图），效果可见 https://t.me/+rngfuYf-OUs3ZDI1
+   - 推送到telegram（带封面图），效果可见 https://t.me/sehuatang_crawler
 
 3. 当前功能基本够用，可能会改进的地方
    - 导出数据到 Excel
