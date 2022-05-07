@@ -3,4 +3,3 @@ httpx==0.22.0
 pymongo==4.0.2
 PyYAML==6.0
 pymongo[srv]
-requests
