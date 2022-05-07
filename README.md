@@ -21,7 +21,7 @@
 4. 常见问题
    1. cloudflare 防护绕过
       - 可以使用 cloudflare 的 workers ，对网站进行反向代理，然后爬取域名设置为 workers 的域名即可
-      - workers 代码参考 ：[production.js](./production.js)
+      - workers 代码参考 ：[production.js](util/production.js)
 
 
 5. 其他
