@@ -23,6 +23,7 @@ class SendMessage:
         url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken"
         params = {"corpid": self.corp_id, "corpsecret": self.app_secret}
         res = httpx.get(url, params=params).json()
+        log.info("send_wecom_message.get_access_token: {}".format(res))
         # config.set_config("wework", "access_token", res["access_token"])
         # config.set_config("wework", "update_time", str(time.time()))
         self.access_token = res["access_token"]
@@ -98,6 +99,7 @@ class SendMessage:
         send_msgs = bytes(json.dumps(data), "utf-8")
         params = {"access_token": self.access_token}
         res = httpx.post(self.send_url, params=params, data=send_msgs).json()
+        log.info("send_wecom_message.send_request: {}".format(res))
         if res["errcode"] == 0:
             return True, res["errmsg"]
         else:
