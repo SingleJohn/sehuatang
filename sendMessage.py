@@ -146,7 +146,7 @@ class SendTelegram:
         self.bot.send_photo(chat_id=self.chat_id, photo=photo_url, caption=caption)
 
     def send_media_group(self, media_list):
-        return self.bot.send_media_group(chat_id=self.chat_id, media=media_list)
+        self.bot.send_media_group(chat_id=self.chat_id, media=media_list)
 
 def send_telegram_request(content: str):
     proxy_enable = config.get_config("proxy_enable")
@@ -226,8 +226,7 @@ def send_tg2(data_list, fid):
                     media_group.append(InputMediaPhoto(media=image_str, parse_mode="markdownV2", caption=content))
                 else:
                     media_group.append(InputMediaPhoto(media=image_str))
-            res = bot.send_media_group(media_group)
-            log.critical(res)
+            bot.send_media_group(media_group)
             sleep(1)
     except Exception as e:
         log.error(e)
