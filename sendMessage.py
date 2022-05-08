@@ -231,7 +231,7 @@ def send_tg2(data_list, fid):
         except Exception as e:
             log.error(f"send telegram message error: {num} {title}")
             log.error(e)
-        sleep(5)
+        sleep(10)
 
 
 def get_chinese_name(fid):
