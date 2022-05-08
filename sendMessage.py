@@ -5,14 +5,17 @@ from time import sleep
 import httpx
 import json
 import config
-
+import logging
 import telegram
 from telegram import InputMediaPhoto
 
 from log_util import TNLog
 
 log = TNLog()
-
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
 class SendWeCom:
     def __init__(self):
