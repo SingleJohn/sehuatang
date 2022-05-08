@@ -227,8 +227,9 @@ def send_tg2(data_list, fid):
                 media_group.append(InputMediaPhoto(media=image_str))
         try:
             bot.send_media_group(media_group)
-            log.info(f"send telegram message success: {magnet} {title}")
+            log.info(f"send telegram message success: {num} {title}")
         except Exception as e:
+            log.error(f"send telegram message error: {num} {title}")
             log.error(e)
         sleep(5)
 
