@@ -5,17 +5,12 @@ from time import sleep
 import httpx
 import json
 import config
-import logging
 import telegram
 from telegram import InputMediaPhoto
 
 from log_util import TNLog
 
 log = TNLog()
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
 
 class SendWeCom:
     def __init__(self):
@@ -203,40 +198,39 @@ def send_tg(data_list, fid):
 
 
 def send_tg2(data_list, fid):
-    try:
-        if config.get_config("tg_bot_token") is None:
-            log.error("tg_bot_token is None")
-            return
-        if config.get_config("tg_chat_id") is None:
-            log.error("tg_chat_id is None")
-            return
-        tag_name = get_chinese_name(fid)
-        bot = SendTelegram()
-        for data in data_list:
-            magnet = data["magnet"]
-            title = data["title"]
-            num = data["number"]
-            post_time = data["post_time"]
-            image_list = data["img"]
-            old_strs = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' ]
-            new_strs = ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!' ]
-            content = f"\n{num} {title}\n\n{magnet}\n\n发布时间：{post_time}\n\n #{tag_name}"
-            # 替换特殊字符
-            for i in range(len(old_strs)):
-                content = content.replace(old_strs[i], new_strs[i])
-            media_group = []
-            for image_str in image_list:
-                index = image_list.index(image_str)
-                if index == len(image_list) - 1:
-                    media_group.append(InputMediaPhoto(media=image_str, parse_mode="markdownV2", caption=content))
-                else:
-                    media_group.append(InputMediaPhoto(media=image_str))
+    if config.get_config("tg_bot_token") is None:
+        log.error("tg_bot_token is None")
+        return
+    if config.get_config("tg_chat_id") is None:
+        log.error("tg_chat_id is None")
+        return
+    tag_name = get_chinese_name(fid)
+    bot = SendTelegram()
+    for data in data_list:
+        magnet = data["magnet"]
+        title = data["title"]
+        num = data["number"]
+        post_time = data["post_time"]
+        image_list = data["img"]
+        old_strs = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' ]
+        new_strs = ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!' ]
+        content = f"\n{num} {title}\n\n{magnet}\n\n发布时间：{post_time}\n\n #{tag_name}"
+        # 替换特殊字符
+        for i in range(len(old_strs)):
+            content = content.replace(old_strs[i], new_strs[i])
+        media_group = []
+        for image_str in image_list:
+            index = image_list.index(image_str)
+            if index == len(image_list) - 1:
+                media_group.append(InputMediaPhoto(media=image_str, parse_mode="markdownV2", caption=content))
+            else:
+                media_group.append(InputMediaPhoto(media=image_str))
+        try:
             bot.send_media_group(media_group)
             log.info(f"send telegram message success: {magnet} {title}")
-            sleep(5)
-    except Exception as e:
-        # log.error(e)
-        logging.exception(e)
+        except Exception as e:
+            log.error(e)
+        sleep(5)
 
 
 def get_chinese_name(fid):
