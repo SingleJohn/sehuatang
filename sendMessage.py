@@ -146,7 +146,7 @@ class SendTelegram:
         self.bot.send_photo(chat_id=self.chat_id, photo=photo_url, caption=caption)
 
     def send_media_group(self, media_list):
-        self.bot.send_media_group(chat_id=self.chat_id, media=media_list)
+        return self.bot.send_media_group(chat_id=self.chat_id, media=media_list)
 
 def send_telegram_request(content: str):
     proxy_enable = config.get_config("proxy_enable")
@@ -198,35 +198,39 @@ def send_tg(data_list, fid):
 
 
 def send_tg2(data_list, fid):
-    if config.get_config("tg_bot_token") is None:
-        log.error("tg_bot_token is None")
-        return
-    if config.get_config("tg_chat_id") is None:
-        log.error("tg_chat_id is None")
-        return
-    tag_name = get_chinese_name(fid)
-    bot = SendTelegram()
-    for data in data_list:
-        magnet = data["magnet"]
-        title = data["title"]
-        num = data["number"]
-        post_time = data["post_time"]
-        image_list = data["img"]
-        old_strs = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' ]
-        new_strs = ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!' ]
-        content = f"\n{num} {title}\n\n{magnet}\n\n发布时间：{post_time}\n\n #{tag_name}"
-        # 替换特殊字符
-        for i in range(len(old_strs)):
-            content = content.replace(old_strs[i], new_strs[i])
-        media_group = []
-        for image_str in image_list:
-            index = image_list.index(image_str)
-            if index == len(image_list) - 1:
-                media_group.append(InputMediaPhoto(media=image_str, parse_mode="markdownV2", caption=content))
-            else:
-                media_group.append(InputMediaPhoto(media=image_str))
-        bot.send_media_group(media_group)
-        sleep(1)
+    try:
+        if config.get_config("tg_bot_token") is None:
+            log.error("tg_bot_token is None")
+            return
+        if config.get_config("tg_chat_id") is None:
+            log.error("tg_chat_id is None")
+            return
+        tag_name = get_chinese_name(fid)
+        bot = SendTelegram()
+        for data in data_list:
+            magnet = data["magnet"]
+            title = data["title"]
+            num = data["number"]
+            post_time = data["post_time"]
+            image_list = data["img"]
+            old_strs = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' ]
+            new_strs = ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!' ]
+            content = f"\n{num} {title}\n\n{magnet}\n\n发布时间：{post_time}\n\n #{tag_name}"
+            # 替换特殊字符
+            for i in range(len(old_strs)):
+                content = content.replace(old_strs[i], new_strs[i])
+            media_group = []
+            for image_str in image_list:
+                index = image_list.index(image_str)
+                if index == len(image_list) - 1:
+                    media_group.append(InputMediaPhoto(media=image_str, parse_mode="markdownV2", caption=content))
+                else:
+                    media_group.append(InputMediaPhoto(media=image_str))
+            res = bot.send_media_group(media_group)
+            log.critical(res)
+            sleep(1)
+    except Exception as e:
+        log.error(e)
 
 
 def get_chinese_name(fid):
