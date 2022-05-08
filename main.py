@@ -8,7 +8,7 @@ import re
 from mongo import save_data, compare_tid, filter_data
 from config import get_config
 from log_util import TNLog
-from sendMessage import SendWeCom, send_tg2
+from sendMessage import SendWeCom, send_tg_media_group
 
 log = TNLog()
 
@@ -253,7 +253,7 @@ async def main2():
         data_list_new = filter_data(data_list, fid)
         save_data(data_list_new, fid)
         if get_config("send_telegram_enable"):
-            send_tg2(data_list_new, fid)
+            send_tg_media_group(data_list_new, fid)
 
     if get_config("send_wecom_enable"):
         send_message()

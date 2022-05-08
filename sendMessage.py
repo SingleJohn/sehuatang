@@ -148,6 +148,10 @@ class SendTelegram:
     def send_media_group(self, media_list):
         self.bot.send_media_group(chat_id=self.chat_id, media=media_list)
 
+
+bot = SendTelegram()
+
+
 def send_telegram_request(content: str):
     proxy_enable = config.get_config("proxy_enable")
     if proxy_enable:
@@ -166,10 +170,11 @@ def send_telegram_request(content: str):
     res = httpx.post(url, data=data, proxies=proxy).json()
     # print(res)
     if res["ok"]:
-        return
+        return True
     else:
         log.error(data)
         log.error("send telegram message error: {}".format(res))
+        return False
 
 
 def send_tg(data_list, fid):
@@ -193,11 +198,32 @@ def send_tg(data_list, fid):
         # 替换特殊字符
         for i in range(len(old_strs)):
             content = content.replace(old_strs[i], new_strs[i])
-        send_telegram_request(content)
+        if send_telegram_request(content):
+            log.info(f"send telegram message success: {title} {num}")
         sleep(3)
 
 
-def send_tg2(data_list, fid):
+def send_tg_message(data, tag_name):
+    magnet = data["magnet"]
+    title = data["title"]
+    num = data["number"]
+    post_time = data["post_time"]
+    image_str = data["img"][0]
+    old_strs = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!']
+    new_strs = ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!']
+
+    content = f"{num} {title}\n\n{magnet}\n\n发布时间：{post_time} \n{image_str}\n\n #{tag_name}"
+    # 替换特殊字符
+    for i in range(len(old_strs)):
+        content = content.replace(old_strs[i], new_strs[i])
+    if send_telegram_request(content):
+        log.info(f"send telegram message success: {title} {num}")
+    else:
+        log.error(f"second send telegram message error: {title} {num}")
+    sleep(3)
+
+
+def send_tg_media_group(data_list, fid):
     if config.get_config("tg_bot_token") is None:
         log.error("tg_bot_token is None")
         return
@@ -205,7 +231,7 @@ def send_tg2(data_list, fid):
         log.error("tg_chat_id is None")
         return
     tag_name = get_chinese_name(fid)
-    bot = SendTelegram()
+
     for data in data_list:
         magnet = data["magnet"]
         title = data["title"]
@@ -231,6 +257,9 @@ def send_tg2(data_list, fid):
         except Exception as e:
             log.error(f"send telegram message error: {num} {title}")
             log.error(e)
+            # mediaGroup 发送失败是，尝试调用普通发送
+            send_tg_message(data, tag_name)
+        # 延迟10秒，原因见 https://telegra.ph/So-your-bot-is-rate-limited-01-26
         sleep(10)
 
 
@@ -275,7 +304,7 @@ def main():
 
     # send_tg(datalist, 103)
 
-    send_tg2(test_data_list, 104)
+    send_tg_media_group(test_data_list, 104)
 
 
 if __name__ == "__main__":
