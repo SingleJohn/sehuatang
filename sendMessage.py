@@ -105,6 +105,7 @@ class SendWeCom:
         res = httpx.post(self.send_url, params=params, data=send_msgs).json()
         log.info("send_wecom_message.send_request: {}".format(res))
         if res["errcode"] == 0:
+            log.info("send_wecom_message: success")
             return True, res["errmsg"]
         else:
             return False, res["errmsg"]
@@ -227,6 +228,7 @@ def send_tg2(data_list, fid):
                 else:
                     media_group.append(InputMediaPhoto(media=image_str))
             bot.send_media_group(media_group)
+            log.info(f"send telegram message success: {content}")
             sleep(1)
     except Exception as e:
         log.error(e)
