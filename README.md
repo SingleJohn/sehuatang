@@ -22,8 +22,8 @@
    1. cloudflare 防护绕过
       - 可以使用 cloudflare 的 workers ，对网站进行反向代理，然后爬取域名设置为 workers 的域名即可
       - workers 代码参考 ：[production.js](util/production.js)
-   2. telegram 频道条目不全
-      - telegram api 限制单条消息的大小，如图片过大，则会导致发送的消息过大，报错
+   2. ~~telegram 频道条目不全~~(应该已经修复)
+      - telegram api 限制单条消息的大小，如图片过大，则会导致发送的消息过大，报错--()
       - 完整数据在 mongodb 中
 
 
@@ -32,4 +32,5 @@
    - 一个公共的mongodb库(权限只读)
       - `mongodb+srv://readonly:cS9NSuiJ1ebHnUL0@cluster0.8mosa.mongodb.net/Cluster0?retryWrites=true&w=majority`
    - 有使用问题可以提issues
-   - 为避免原站压力过大，建议直接订阅上面的 telegram 频道，或使用公共数据库查看数据
+   - 为避免原站压力过大，建议直接订阅上面的 telegram 频道，或使用上方提供的公共数据库查看数据
+   - 预览图可见：[effect picture](effect%20picture)
