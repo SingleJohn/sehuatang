@@ -132,6 +132,7 @@ class SendWeCom:
         elif type == "mpnews":
             self.send_mpnews_message(title, content, touser)
 
+
 class SendTelegram:
     def __init__(self):
         self.chat_id = config.get_config('tg_chat_id')
@@ -234,7 +235,8 @@ def send_tg2(data_list, fid):
             log.info(f"send telegram message success: {magnet} {title}")
             sleep(5)
     except Exception as e:
-        log.error(e)
+        # log.error(e)
+        logging.exception(e)
 
 
 def get_chinese_name(fid):
