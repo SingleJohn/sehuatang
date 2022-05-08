@@ -5,12 +5,16 @@ from time import sleep
 import httpx
 import json
 import config
+
+import telegram
+from telegram import InputMediaPhoto
+
 from log_util import TNLog
 
 log = TNLog()
 
 
-class SendMessage:
+class SendWeCom:
     def __init__(self):
         self.access_token = None
         self.agent_id = config.get_config("agent_id")
@@ -124,6 +128,25 @@ class SendMessage:
         elif type == "mpnews":
             self.send_mpnews_message(title, content, touser)
 
+class SendTelegram:
+    def __init__(self):
+        self.chat_id = config.get_config('tg_chat_id')
+        self.token = config.get_config('tg_bot_token')
+        self.proxy_host = config.get_config('proxy_host')
+        if config.get_config("proxy_enable"):
+            self.proxy = telegram.utils.request.Request(proxy_url=self.proxy_host)
+        else:
+            self.proxy = None
+        self.bot = telegram.Bot(token=self.token, request=self.proxy)
+
+    def send_message(self, message):
+        self.bot.send_message(chat_id=self.chat_id, text=message)
+
+    def send_photo(self, photo_url, caption=None):
+        self.bot.send_photo(chat_id=self.chat_id, photo=photo_url, caption=caption)
+
+    def send_media_group(self, media_list):
+        self.bot.send_media_group(chat_id=self.chat_id, media=media_list)
 
 def send_telegram_request(content: str):
     proxy_enable = config.get_config("proxy_enable")
@@ -174,6 +197,38 @@ def send_tg(data_list, fid):
         sleep(3)
 
 
+def send_tg2(data_list, fid):
+    if config.get_config("tg_bot_token") is None:
+        log.error("tg_bot_token is None")
+        return
+    if config.get_config("tg_chat_id") is None:
+        log.error("tg_chat_id is None")
+        return
+    tag_name = get_chinese_name(fid)
+    bot = SendTelegram()
+    for data in data_list:
+        magnet = data["magnet"]
+        title = data["title"]
+        num = data["number"]
+        post_time = data["post_time"]
+        image_list = data["img"]
+        old_strs = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' ]
+        new_strs = ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!' ]
+        content = f"\n{num} {title}\n\n{magnet}\n\n发布时间：{post_time}\n\n #{tag_name}"
+        # 替换特殊字符
+        for i in range(len(old_strs)):
+            content = content.replace(old_strs[i], new_strs[i])
+        media_group = []
+        for image_str in image_list:
+            index = image_list.index(image_str)
+            if index == len(image_list) - 1:
+                media_group.append(InputMediaPhoto(media=image_str, parse_mode="markdownV2", caption=content))
+            else:
+                media_group.append(InputMediaPhoto(media=image_str))
+        bot.send_media_group(media_group)
+        sleep(1)
+
+
 def get_chinese_name(fid):
     if fid == 103:
         return "高清中文字幕"
@@ -208,10 +263,14 @@ def main():
     <pre><code class="language-python">pre-formatted fixed-width code block written in the Python programming language</code></pre>
     """
 
-    send_telegram_request(content)
+    test_data_list = []
+
+    # send_telegram_request(content)
 
 
     # send_tg(datalist, 103)
+
+    send_tg2(test_data_list, 104)
 
 
 if __name__ == "__main__":
