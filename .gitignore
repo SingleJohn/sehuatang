@@ -7,3 +7,5 @@ build/
 *.spec
 *.html
 config.yaml
+renamefile.py
+cfproxy.py

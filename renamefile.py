@@ -24,7 +24,7 @@ def get_file_info(path):
 def get_mongo_info():
     # 查询mongodb中的文件名，通过字符串查询
     client = pymongo.MongoClient(
-        "mongodb+srv://dong:6f9j27Kn6cDvHCne@cluster0.8mosa.mongodb.net/Cluster0?retryWrites=true&w=majority"
+        "mongodb+srv://readonly:cS9NSuiJ1ebHnUL0@cluster0.8mosa.mongodb.net/Cluster0?retryWrites=true&w=majority"
     )
     db = client.sehuatang
     collection = db.hd_chinese_subtitles
