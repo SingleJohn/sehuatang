@@ -1,7 +1,6 @@
 # python3
 # -*- coding: utf-8 -*-
 import datetime
-from functools import cache
 from time import sleep
 
 import httpx
