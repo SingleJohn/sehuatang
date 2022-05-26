@@ -1,5 +1,6 @@
 # python3
 # -*- coding: utf-8 -*-
+import datetime
 from time import sleep
 
 import httpx
@@ -11,6 +12,7 @@ from telegram import InputMediaPhoto
 from log_util import TNLog
 
 log = TNLog()
+
 
 class SendWeCom:
     def __init__(self):
@@ -130,9 +132,9 @@ class SendWeCom:
 
 class SendTelegram:
     def __init__(self):
-        self.chat_id = config.get_config('tg_chat_id')
-        self.token = config.get_config('tg_bot_token')
-        self.proxy_host = config.get_config('proxy_host')
+        self.chat_id = config.get_config("tg_chat_id")
+        self.token = config.get_config("tg_bot_token")
+        self.proxy_host = config.get_config("proxy_host")
         if config.get_config("proxy_enable"):
             self.proxy = telegram.utils.request.Request(proxy_url=self.proxy_host)
         else:
@@ -191,8 +193,46 @@ def send_tg(data_list, fid):
         num = data["number"]
         post_time = data["post_time"]
         image_str = data["img"][0]
-        old_strs = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' ]
-        new_strs = ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!' ]
+        old_strs = [
+            "_",
+            "*",
+            "[",
+            "]",
+            "(",
+            ")",
+            "~",
+            "`",
+            ">",
+            "#",
+            "+",
+            "-",
+            "=",
+            "|",
+            "{",
+            "}",
+            ".",
+            "!",
+        ]
+        new_strs = [
+            "\_",
+            "\*",
+            "\[",
+            "\]",
+            "\(",
+            "\)",
+            "\~",
+            "\`",
+            "\>",
+            "\#",
+            "\+",
+            "\-",
+            "\=",
+            "\|",
+            "\{",
+            "\}",
+            "\.",
+            "\!",
+        ]
 
         content = f"{num} {title}\n\n{magnet}\n\n发布时间：{post_time} \n{image_str}\n\n #{tag_name}"
         # 替换特殊字符
@@ -209,10 +249,50 @@ def send_tg_message(data, tag_name):
     num = data["number"]
     post_time = data["post_time"]
     image_str = data["img"][0]
-    old_strs = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!']
-    new_strs = ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!']
+    old_strs = [
+        "_",
+        "*",
+        "[",
+        "]",
+        "(",
+        ")",
+        "~",
+        "`",
+        ">",
+        "#",
+        "+",
+        "-",
+        "=",
+        "|",
+        "{",
+        "}",
+        ".",
+        "!",
+    ]
+    new_strs = [
+        "\_",
+        "\*",
+        "\[",
+        "\]",
+        "\(",
+        "\)",
+        "\~",
+        "\`",
+        "\>",
+        "\#",
+        "\+",
+        "\-",
+        "\=",
+        "\|",
+        "\{",
+        "\}",
+        "\.",
+        "\!",
+    ]
 
-    content = f"{num} {title}\n\n{magnet}\n\n发布时间：{post_time} \n{image_str}\n\n #{tag_name}"
+    content = (
+        f"{num} {title}\n\n{magnet}\n\n发布时间：{post_time} \n{image_str}\n\n #{tag_name}"
+    )
     # 替换特殊字符
     for i in range(len(old_strs)):
         content = content.replace(old_strs[i], new_strs[i])
@@ -238,8 +318,46 @@ def send_tg_media_group(data_list, fid):
         num = data["number"]
         post_time = data["post_time"]
         image_list = data["img"]
-        old_strs = ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' ]
-        new_strs = ['\_', '\*', '\[', '\]', '\(', '\)', '\~', '\`', '\>', '\#', '\+', '\-', '\=', '\|', '\{', '\}', '\.', '\!' ]
+        old_strs = [
+            "_",
+            "*",
+            "[",
+            "]",
+            "(",
+            ")",
+            "~",
+            "`",
+            ">",
+            "#",
+            "+",
+            "-",
+            "=",
+            "|",
+            "{",
+            "}",
+            ".",
+            "!",
+        ]
+        new_strs = [
+            "\_",
+            "\*",
+            "\[",
+            "\]",
+            "\(",
+            "\)",
+            "\~",
+            "\`",
+            "\>",
+            "\#",
+            "\+",
+            "\-",
+            "\=",
+            "\|",
+            "\{",
+            "\}",
+            "\.",
+            "\!",
+        ]
         content = f"\n{num} {title}\n\n{magnet}\n\n发布时间：{post_time}\n\n #{tag_name}"
         # 替换特殊字符
         for i in range(len(old_strs)):
@@ -248,7 +366,11 @@ def send_tg_media_group(data_list, fid):
         for image_str in image_list:
             index = image_list.index(image_str)
             if index == len(image_list) - 1:
-                media_group.append(InputMediaPhoto(media=image_str, parse_mode="markdownV2", caption=content))
+                media_group.append(
+                    InputMediaPhoto(
+                        media=image_str, parse_mode="markdownV2", caption=content
+                    )
+                )
             else:
                 media_group.append(InputMediaPhoto(media=image_str))
         try:
@@ -261,6 +383,14 @@ def send_tg_media_group(data_list, fid):
             send_tg_message(data, tag_name)
         # 延迟10秒，原因见 https://telegra.ph/So-your-bot-is-rate-limited-01-26
         sleep(10)
+    if len(data_list) > 0:
+        sleep(10)
+        name_list = [data["number"] + data["title"] for data in data_list]
+        send_message_text = f"#{tag_name} 抓取完成。\n\n本次抓取共抓取{len(data_list)}个资源 \n\n 抓取时间：{datetime.now()} \n\n 抓取结果: \n "
+        name_str = "\n".join(name_list)
+        send_message_text += name_str
+        # send_telegram_request(send_message_text)
+        bot.send_message(send_message_text)
 
 
 def get_chinese_name(fid):
@@ -300,7 +430,6 @@ def main():
     test_data_list = []
 
     # send_telegram_request(content)
-
 
     # send_tg(datalist, 103)
 
