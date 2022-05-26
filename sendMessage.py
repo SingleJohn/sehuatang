@@ -1,6 +1,7 @@
 # python3
 # -*- coding: utf-8 -*-
 import datetime
+from functools import cache
 from time import sleep
 
 import httpx
@@ -385,12 +386,16 @@ def send_tg_media_group(data_list, fid):
         sleep(10)
     if len(data_list) > 0:
         sleep(10)
-        name_list = [data["number"] + data["title"] for data in data_list]
-        send_message_text = f"#{tag_name} 抓取完成。\n\n本次抓取共抓取{len(data_list)}个资源 \n\n 抓取时间：{datetime.now()} \n\n 抓取结果: \n "
-        name_str = "\n".join(name_list)
-        send_message_text += name_str
-        # send_telegram_request(send_message_text)
-        bot.send_message(send_message_text)
+        try:
+            name_list = [data["number"] + data["title"] for data in data_list]
+            send_message_text = f"#{tag_name} 抓取完成。\n\n本次抓取共抓取{len(data_list)}个资源 \n\n 抓取时间：{datetime.now()} \n\n 抓取结果: \n "
+            name_str = "\n".join(name_list)
+            send_message_text += name_str
+            # send_telegram_request(send_message_text)
+            bot.send_message(send_message_text)
+            log.info(f"send telegram message success: {send_message_text}")
+        except Exception as e:
+            log.error(f"send text error" + e)
 
 
 def get_chinese_name(fid):
