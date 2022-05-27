@@ -388,7 +388,7 @@ def send_tg_media_group(data_list, fid):
         try:
             name_list = [data["number"] + " " + data["title"] for data in data_list]
             time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-            send_message_text = f"#{tag_name} 抓取完成。\n\n本次抓取共抓取{len(data_list)}个资源 \n\n 抓取时间：{time_str} \n\n 抓取结果: \n "
+            send_message_text = f"#{tag_name} 抓取完成。\n\n本次抓取共抓取{len(data_list)}个资源 \n\n抓取时间：{time_str} \n\n抓取结果: \n"
             name_str = "\n".join(name_list)
             send_message_text += name_str
             # send_telegram_request(send_message_text)
