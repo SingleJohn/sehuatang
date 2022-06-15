@@ -17,6 +17,11 @@ def get_file_info(path):
                 # print(os.path.join(root, file))
                 file_info["file_path"] = root
                 file_info["file_path_name"] = os.path.join(root, file)
+                if file_info["file_name"].startswith("[98t.tv]"):
+                    file_info["code_number"] = file_info["file_name"].split("]")[1]
+                else:
+                    file_info["code_number"] = file_info["file_name"]
+
                 file_info_list.append(file_info)
     return file_info_list
 
@@ -29,7 +34,7 @@ def get_mongo_info():
     db = client.sehuatang
     collection = db.hd_chinese_subtitles
     # res = collection.find({}, {"_id": 0, "number": 1, "title": 1}).sort("_id", pymongo.DESCENDING).limit(50)
-    res = collection.find({}, {"_id": 0, "number": 1, "title": 1})
+    res = collection.find({}, {"_id": 0, "number": 1, "title": 1}).sort("_id", pymongo.DESCENDING).limit(100)
 
     return res
 
@@ -40,7 +45,7 @@ def rename_file_name(file_info_list, res):
     for i in res:
         for j in file_info_list:
             # 不区分大小写
-            if i["number"].lower() == j["file_name"].lower():
+            if i["number"].lower() == j["code_number"].lower():
                 ld = {}
                 name = i["number"].lower() + "-C " + i["title"]
                 print(i["title"])
@@ -67,10 +72,12 @@ def get_dirs(path):
     dir_info_list = []
     root, dirs, _ = os.walk(path).__next__()
     for dir_name in dirs:
-        dir_info = {}
+        dir_info = {"dir_name": dir_name, "dir_path": root}
+        if dir_name.startswith("[98t.tv]"):
+            dir_info["code_number"] = dir_name.split("]")[1]
+        else:
+            dir_info["code_number"] = dir_name
         # dir_path = os.path.join(root, dir_name)
-        dir_info["dir_name"] = dir_name
-        dir_info["dir_path"] = root
         dir_info_list.append(dir_info)
     return dir_info_list
 
@@ -79,7 +86,7 @@ def rename_dir_name(dir_info_list, old_new):
     # 重命名文件夹
     for i in dir_info_list:
         for j in old_new:
-            if i["dir_name"].lower() == j["number"].lower():
+            if i["code_number"].lower() == j["number"].lower():
                 dir_old_path_name = os.path.join(i["dir_path"], i["dir_name"])
                 dir_new_path_name = os.path.join(i["dir_path"], j["file_name"])
                 print(dir_old_path_name)
