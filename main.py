@@ -1,6 +1,5 @@
 import asyncio
 import time
-import random
 import httpx
 import bs4
 import re
