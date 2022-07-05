@@ -413,6 +413,8 @@ def get_chinese_name(fid):
         return "vr"
     elif fid == 151:
         return "4k"
+    elif fid == 2:
+        return "国产原创"
     else:
         return "other"
 

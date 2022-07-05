@@ -42,6 +42,8 @@ def get_plate_name(fid):
         return "vr_video"
     elif fid == 151:
         return "4k_video"
+    elif fid == 2:
+        return "domestic_original"
     else:
         return "other"
 
