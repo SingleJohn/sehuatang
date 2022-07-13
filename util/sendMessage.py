@@ -9,7 +9,7 @@ from util import config
 import telegram
 from telegram import InputMediaPhoto
 
-from log_util import TNLog
+from util.log_util import TNLog
 
 log = TNLog()
 

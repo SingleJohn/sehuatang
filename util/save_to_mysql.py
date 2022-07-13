@@ -2,7 +2,7 @@ import time
 
 import pymysql
 
-from log_util import TNLog
+from util.log_util import TNLog
 from util.config import get_config
 
 log = TNLog()

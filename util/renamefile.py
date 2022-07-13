@@ -1,7 +1,7 @@
 import os
 import shutil
 import pymongo
-from log_util import TNLog
+from util.log_util import TNLog
 
 log = TNLog()
 

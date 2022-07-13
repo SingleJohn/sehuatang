@@ -4,10 +4,10 @@ import httpx
 import bs4
 import re
 
-from mongo import save_data, compare_tid, filter_data
+from util.mongo import save_data, compare_tid, filter_data
 from util.config import get_config
-from log_util import TNLog
-from sendMessage import SendWeCom, send_tg_media_group
+from util.log_util import TNLog
+from util.sendMessage import SendWeCom, send_tg_media_group
 from util.save_to_mysql import SaveToMysql
 
 log = TNLog()
@@ -274,7 +274,7 @@ async def main2():
 
 def send_message():
     wecom = SendWeCom()
-    from mongo import get_send_context
+    from util.mongo import get_send_context
     wecom.send_message("色花堂抓取结果", get_send_context(), "mpnews")
 
 

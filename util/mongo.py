@@ -3,7 +3,7 @@
 import pymongo
 import time
 from util.config import get_config
-from log_util import TNLog
+from util.log_util import TNLog
 
 log = TNLog()
 
