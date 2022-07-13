@@ -1,0 +1,32 @@
+version: '3'
+services:
+  sht_main:
+    build:
+      context: .
+      dockerfile: main.Dockerfile
+    command: 'python schedule_main.py'
+    volumes:
+      - .:/app
+    depends_on:
+      - sht_mongodb
+      - sht_mysql
+
+  sht_mongodb:
+    image: mongo:3.6
+    restart: always
+    volumes:
+      - .mongodb:/data/db
+    ports:
+      - "27018:27017"
+
+  sht_mysql:
+    image: mysql:8.0.29
+    restart: always
+    container_name: "sht_mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
+      - "33067:3306"
+    volumes:
+      - ./mysql_init:/docker-entrypoint-initdb.d
+      - .mysql:/var/lib/mysql

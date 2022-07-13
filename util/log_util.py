@@ -15,7 +15,7 @@ if os.path.exists(dir + "/logs") is False:
 handlers = {
     logging.NOTSET: os.path.join(dir, "../logs/notset.log"),
     logging.DEBUG: os.path.join(dir, "../logs/debug.log"),
-    logging.INFO: os.path.join(dir, "../effect picture/info.log"),
+    logging.INFO: os.path.join(dir, "../logs/info.log"),
     logging.WARNING: os.path.join(dir, "../logs/warning.log"),
     logging.ERROR: os.path.join(dir, "../logs/error.log"),
     logging.CRITICAL: os.path.join(dir, "../logs/critical.log"),
