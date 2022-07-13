@@ -6,3 +6,4 @@ python-telegram-bot=13.11
 pymongo[srv]
 bs4~=0.0.1
 requests~=2.27.1
+pymysql~=1.0.2

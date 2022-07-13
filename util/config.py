@@ -2,7 +2,8 @@ import yaml
 import os
 
 dir = os.path.dirname(__file__)
-config_path = os.path.join(dir, "config.yaml")
+config_path = os.path.join(dir, "../config.yaml")
+
 
 # 读取配置文件
 def read_config(config_path):

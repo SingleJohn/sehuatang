@@ -5,9 +5,10 @@ import bs4
 import re
 
 from mongo import save_data, compare_tid, filter_data
-from config import get_config
+from util.config import get_config
 from log_util import TNLog
 from sendMessage import SendWeCom, send_tg_media_group
+from util.save_to_mysql import SaveToMysql
 
 log = TNLog()
 
@@ -194,6 +195,8 @@ async def main2():
     fid_list = config["sehuatang"]["fid"]
     page_num = config["sehuatang"]["page_num"]
     date_time = config["sehuatang"]["date"]
+    mysql_enable = config["mysql"]["enable"]
+    mongodb_enable = config["mongodb"]["enable"]
 
     if date_time is None:
         date_time = time.strftime("%Y-%m-%d", time.localtime())
@@ -226,8 +229,14 @@ async def main2():
             info_list_all.extend(info_list)
             tid_list_all.extend(tid_list)
         log.info("即将开始爬取的页面 " + " ".join(tid_list_all))
-
-        tid_list_new, info_list_new = compare_tid(tid_list_all, fid, info_list_all)
+        info_list_new = []
+        tid_list_new = []
+        if mongodb_enable:
+            tid_list_new, info_list_new = compare_tid(tid_list_all, fid, info_list_all)
+        if mysql_enable:
+            mysql = SaveToMysql()
+            tid_list_new, info_list_new = mysql.compare_tid(tid_list_all, fid, info_list_all)
+            mysql.close()
         log.info("需要爬取的页面 " + " ".join(tid_list_new))
 
         data_list = []
@@ -248,11 +257,16 @@ async def main2():
                 data_list.append(data)
         log.info("本次抓取的数据条数为：" + str(len(data_list)))
         log.info("开始写入数据库")
-        # data_list.reverse()
-        data_list_new = filter_data(data_list, fid)
-        save_data(data_list_new, fid)
+        if mysql_enable:
+            mysql = SaveToMysql()
+            data_list_new = mysql.filter_data(data_list, fid)
+            mysql.save_data(data_list_new, fid)
+            mysql.close()
+        if mongodb_enable:
+            data_list_new = filter_data(data_list, fid)
+            save_data(data_list_new, fid)
         if get_config("send_telegram_enable"):
-            send_tg_media_group(data_list_new, fid)
+            send_tg_media_group(data_list, fid)
 
     if get_config("send_wecom_enable"):
         send_message()

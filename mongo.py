@@ -2,7 +2,7 @@
 
 import pymongo
 import time
-from config import get_config
+from util.config import get_config
 from log_util import TNLog
 
 log = TNLog()
@@ -55,12 +55,12 @@ def save_data(data_list, fid):
     if len(data_list) > 0:
         collection.insert_many(data_list)
         send_context(data_list, collection_name)
-        log.info("保存数据成功, 共存入数据库{}条".format(len(data_list)))
+        log.info("mongo 保存数据成功, 共存入数据库{}条".format(len(data_list)))
     else:
         global send_context_str
         send_context_str += "\n " + collection_name + ":\n"
         send_context_str += "没有新数据\n"
-        log.info("未查询到新数据")
+        log.info("mongodb 未存入新数据")
 
 
 def filter_data(data_list, fid):     # 过滤数据

@@ -5,7 +5,7 @@ from time import sleep
 
 import httpx
 import json
-import config
+from util import config
 import telegram
 from telegram import InputMediaPhoto
 
