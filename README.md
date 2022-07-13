@@ -13,7 +13,10 @@
    - 异步并发
    - 推送到企业微信
    - 推送到telegram（带封面图），效果可见 https://t.me/sehuatang_crawler
-   - 将数据存入 mysql (2022-07-13 新增)，需要在配置文件中配置相关配置项，同时增加了控制项控制是否存入mysql或mongodb
+   - 将数据存入 mysql (2022-07-13 新增)
+     - 需要使用[mysql_init.sql](util/mysql_init.sql)对数据库进行初始化（建库、建表）
+     - 需要在配置文件中配置相关配置项
+     - 增加了控制项控制是否存入mysql或mongodb
 
 3. 当前功能基本够用，可能会改进的地方
    - 导出数据到 Excel
