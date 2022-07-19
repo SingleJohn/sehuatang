@@ -1,5 +1,3 @@
-from ast import In
-from statistics import median_grouped
 import telebot
 from telebot.types import InputMediaPhoto
 from telebot.util import antiflood
