@@ -93,6 +93,7 @@ def send_media_group(data_list, fid):
             else:
                 media_group.append(InputMediaPhoto(media=image))
         antiflood(bot.send_media_group, chat_id=chat_id, media=media_group)
+        log.debug(f"send_media_group: {content}")
     if len(data_list) > 0:
         name_list = [data["number"] + " " + data["title"] for data in data_list]
         time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
