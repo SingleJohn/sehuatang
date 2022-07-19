@@ -9,6 +9,7 @@ from util.config import get_config
 from util.log_util import TNLog
 from util.sendMessage import SendWeCom, send_tg_media_group
 from util.save_to_mysql import SaveToMysql
+from util.sendTelegram import send_media_group
 
 log = TNLog()
 
@@ -266,7 +267,7 @@ async def main2():
             data_list_new = filter_data(data_list, fid)
             save_data(data_list_new, fid)
         if get_config("send_telegram_enable"):
-            send_tg_media_group(data_list, fid)
+            send_media_group(data_list, fid)
 
     if get_config("send_wecom_enable"):
         send_message()
