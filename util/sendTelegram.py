@@ -2,11 +2,10 @@ import telebot
 from telebot.types import InputMediaPhoto
 from telebot.util import antiflood
 import time
-from util.log_util import TNLog
+from util.log_util import log
 from util.config import get_config
 
 
-log = TNLog()
 bot_token = get_config("tg_bot_token")
 chat_id = get_config("tg_chat_id")
 bot = telebot.TeleBot(bot_token)

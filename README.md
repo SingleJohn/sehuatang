@@ -11,7 +11,7 @@
    - 将数据存入 MongoDB
    - 判断数据是否存在，存在则跳过
    - 异步并发
-   - 推送到企业微信
+   - ~~推送到企业微信~~
    - 推送到telegram（带封面图），效果可见telegram频道：[sehuatang crawler](https://t.me/sehuatang_crawler)
    - 将数据存入 mysql (2022-07-13 新增)
      - 需要使用[mysql_init.sql](mysql_init/mysql_init.sql)对数据库进行初始化（建库、建表）
@@ -31,7 +31,7 @@
    1. cloudflare 防护绕过
       - 可以使用 cloudflare 的 workers ，对网站进行反向代理，然后爬取域名设置为 workers 的域名即可
       - workers 代码参考 ：[production.js](util/production.js)
-   2. ~~telegram 频道条目不全~~(应该已经修复)
+   2. ~~telegram 频道条目不全~~(已修复)
       - telegram api 限制单条消息的大小，如图片过大，则会导致发送的消息过大，报错--()
       - 完整数据在 mongodb 中
 

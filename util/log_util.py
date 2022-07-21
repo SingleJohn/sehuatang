@@ -97,6 +97,8 @@ class TNLog(object):
         self.__loggers[logging.CRITICAL].critical(message)
 
 
+log = TNLog()
+
 if __name__ == "__main__":
     logger = TNLog()
 
