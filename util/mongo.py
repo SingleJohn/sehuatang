@@ -44,6 +44,12 @@ def get_plate_name(fid):
         return "4k_video"
     elif fid == 2:
         return "domestic_original"
+    elif fid == 38:
+        return "EU_US_no_mosaic"
+    elif fid == 107:
+        return "three_levels_photo"
+    elif fid == 152:
+        return "korean_anchorman"
     else:
         return "other"
 

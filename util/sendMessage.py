@@ -413,6 +413,12 @@ def get_chinese_name(fid):
         return "4k"
     elif fid == 2:
         return "国产原创"
+    elif fid == 38:
+        return "欧美无码"
+    elif fid == 107:
+        return "三级写真"
+    elif fid == 152:
+        return "韩国主播"
     else:
         return "other"
 
