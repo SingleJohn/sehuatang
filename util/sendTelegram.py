@@ -76,11 +76,12 @@ def send_media_group(data_list, fid):
         else:
             tag_name = "other"
         magnet = data["magnet"]
+        magnet_115 = data["magnet_115"]
         title = data["title"]
         num = data["number"]
         post_time = data["post_time"]
         image_list = data["img"]
-        content = f"\n{num} {title}\n\n{magnet}\n\n发布时间：{post_time}\n\n #{tag_name}"
+        content = f"\n{num} {title}\n\n磁力链接：\n{magnet}\n防115屏蔽压缩包磁链：\n{magnet_115}\n\n发布时间：{post_time}\n\n #{tag_name}"
         content = special_char_sub(content)
         media_group = []
         for image in image_list:

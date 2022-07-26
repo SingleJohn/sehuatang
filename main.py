@@ -105,6 +105,8 @@ async def get_page(tid, proxy, f_info):
             img_list.append(i.attrs["file"])
         # 磁力链接
         magnet = soup.find("div", class_="blockcode").find("li").get_text()
+        # 查找下一个blockcode
+        magnet_115 = soup.find("div", class_="blockcode").find_next("div", class_="blockcode").find("li").get_text()
         # 发布时间
         # post_time = (
         #     soup.find("img", class_="authicn vm")
@@ -123,6 +125,7 @@ async def get_page(tid, proxy, f_info):
         data["post_time"] = post_time
         data["img"] = img_list
         data["magnet"] = magnet
+        data["magnet_115"] = magnet_115
         log.debug("Crawl the page " + tid)
         log.debug(data.values())
         return data, f_info
