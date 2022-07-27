@@ -9,3 +9,6 @@ build/
 config.yaml
 util/renamefile.py
 cfproxy.py
+test/
+test_*.py
+test.py
