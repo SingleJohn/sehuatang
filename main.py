@@ -106,7 +106,11 @@ async def get_page(tid, proxy, f_info):
         # 磁力链接
         magnet = soup.find("div", class_="blockcode").find("li").get_text()
         # 查找下一个blockcode
-        magnet_115 = soup.find("div", class_="blockcode").find_next("div", class_="blockcode").find("li").get_text()
+        next_blockcode = soup.find("div", class_="blockcode").find_next("div", class_="blockcode")
+        if next_blockcode is not None:
+            magnet_115 = next_blockcode.find("li").get_text()
+        else:
+            magnet_115 = None
         # 发布时间
         # post_time = (
         #     soup.find("img", class_="authicn vm")
