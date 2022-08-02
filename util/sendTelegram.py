@@ -84,7 +84,10 @@ def send_media_group(data_list, fid):
         num = data["number"]
         post_time = data["post_time"]
         image_list = data["img"]
-        content = f"\n{num} {title}\n\n磁力链接：\n{magnet}\n防115屏蔽压缩包磁链：\n{magnet_115}\n\n发布时间：{post_time}\n\n #{tag_name}"
+        if magnet_115 is None:
+            content = f"\n{num} {title}\n\n磁力链接：\n{magnet}\n\n发布时间：{post_time}\n\n #{tag_name}"
+        else:
+            content = f"\n{num} {title}\n\n磁力链接：\n{magnet}\n防115屏蔽压缩包磁链：\n{magnet_115}\n\n发布时间：{post_time}\n\n #{tag_name}"
         content = special_char_sub(content)
         media_group = []
         for image in image_list:
