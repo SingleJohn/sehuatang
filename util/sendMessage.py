@@ -5,7 +5,7 @@ from time import sleep
 
 import httpx
 import json
-from util import config
+from util import read_config
 import telegram
 from telegram import InputMediaPhoto
 
@@ -15,9 +15,9 @@ from util.log_util import log
 class SendWeCom:
     def __init__(self):
         self.access_token = None
-        self.agent_id = config.get_config("agent_id")
-        self.corp_id = config.get_config("corp_id")
-        self.app_secret = config.get_config("corp_secret")
+        self.agent_id = read_config.get_config("agent_id")
+        self.corp_id = read_config.get_config("corp_id")
+        self.app_secret = read_config.get_config("corp_secret")
         self.send_url = "https://qyapi.weixin.qq.com/cgi-bin/message/send"
 
     def get_access_token(self) -> None:
@@ -26,18 +26,16 @@ class SendWeCom:
         params = {"corpid": self.corp_id, "corpsecret": self.app_secret}
         res = httpx.get(url, params=params).json()
         log.info("send_wecom_message.get_access_token: {}".format(res))
-        # config.set_config("wework", "access_token", res["access_token"])
-        # config.set_config("wework", "update_time", str(time.time()))
         self.access_token = res["access_token"]
 
     def get_application_list(self):
-        if config.get_config("wework", "agent_id") is not None:
+        if read_config.get_config("wework", "agent_id") is not None:
             return
         url = "https://qyapi.weixin.qq.com/cgi-bin/agent/list"
-        params = {"access_token": config.get_config("wework", "access_token")}
+        params = {"access_token": read_config.get_config("wework", "access_token")}
         res = httpx.get(url, params=params).json()
-        config.set_config("wework", "agent_id", str(res["agentlist"][0]["agentid"]))
-        config.set_config("wework", "agent_name", res["agentlist"][0]["name"])
+        read_config.set_config("wework", "agent_id", str(res["agentlist"][0]["agentid"]))
+        read_config.set_config("wework", "agent_name", res["agentlist"][0]["name"])
 
     # def get_application_info(self):
     #     url = "https://qyapi.weixin.qq.com/cgi-bin/agent/get"
@@ -71,7 +69,7 @@ class SendWeCom:
         self.send_request(data)
 
     def send_mpnews_message(self, title, content, touser="@all"):
-        if config.get_config("media_id") is None:
+        if read_config.get_config("media_id") is None:
             self.send_text_message(title, content)
             return
         data = {
@@ -82,7 +80,7 @@ class SendWeCom:
                 "articles": [
                     {
                         "title": title,
-                        "thumb_media_id": config.get_config("media_id"),
+                        "thumb_media_id": read_config.get_config("media_id"),
                         "author": "Author",
                         "content_source_url": "URL",
                         "content": content.replace("\n", "<br>"),
@@ -118,7 +116,7 @@ class SendWeCom:
 
     def send_message(self, title: str, content: str, type: str = "text"):
         self.get_access_token()
-        touser = config.get_config("to_user")
+        touser = read_config.get_config("to_user")
         # self.get_application_list()
         if type == "text":
             self.send_text_message(title, content, touser)
@@ -130,10 +128,10 @@ class SendWeCom:
 
 class SendTelegram:
     def __init__(self):
-        self.chat_id = config.get_config("tg_chat_id")
-        self.token = config.get_config("tg_bot_token")
-        self.proxy_host = config.get_config("proxy_host")
-        if config.get_config("proxy_enable"):
+        self.chat_id = read_config.get_config("tg_chat_id")
+        self.token = read_config.get_config("tg_bot_token")
+        self.proxy_host = read_config.get_config("proxy_host")
+        if read_config.get_config("proxy_enable"):
             self.proxy = telegram.utils.request.Request(proxy_url=self.proxy_host)
         else:
             self.proxy = None
@@ -153,16 +151,16 @@ bot = SendTelegram()
 
 
 def send_telegram_request(content: str):
-    proxy_enable = config.get_config("proxy_enable")
+    proxy_enable = read_config.get_config("proxy_enable")
     if proxy_enable:
-        proxy = config.get_config("proxy_host")
+        proxy = read_config.get_config("proxy_host")
     else:
         proxy = None
     url = "https://api.telegram.org/bot{}/sendMessage".format(
-        config.get_config("tg_bot_token")
+        read_config.get_config("tg_bot_token")
     )
     data = {
-        "chat_id": config.get_config("tg_chat_id"),
+        "chat_id": read_config.get_config("tg_chat_id"),
         "text": content,
         "parse_mode": "markdownV2",
         "disable_notification": True,
@@ -178,10 +176,10 @@ def send_telegram_request(content: str):
 
 
 def send_tg(data_list, fid):
-    if config.get_config("tg_bot_token") is None:
+    if read_config.get_config("tg_bot_token") is None:
         log.info("tg_bot_token is None")
         return
-    if config.get_config("tg_chat_id") is None:
+    if read_config.get_config("tg_chat_id") is None:
         log.info("tg_chat_id is None")
         return
     tag_name = get_chinese_name(fid)
@@ -302,10 +300,10 @@ def send_tg_message(data, tag_name):
 
 
 def send_tg_media_group(data_list, fid):
-    if config.get_config("tg_bot_token") is None:
+    if read_config.get_config("tg_bot_token") is None:
         log.error("tg_bot_token is None")
         return
-    if config.get_config("tg_chat_id") is None:
+    if read_config.get_config("tg_chat_id") is None:
         log.error("tg_chat_id is None")
         return
     tag_name = get_chinese_name(fid)
