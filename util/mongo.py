@@ -1,25 +1,13 @@
 # 连接mongodb
 
 import pymongo
-import time
-from util.config import get_config
-from util.log_util import TNLog
+from util.log_util import log
+from util.config import date, mongodb_host, mongodb_port, mongodb_conn_str, mongodb_use_conn_str
 
-log = TNLog()
-
-host = get_config("db_host")
-port = get_config("db_port")
-date = get_config("date")
-if date is None:
-    date = time.strftime("%Y-%m-%d", time.localtime())
+if mongodb_use_conn_str:
+    client = pymongo.MongoClient(mongodb_conn_str)
 else:
-    date = date.__str__()
-
-use_conn_str = get_config("use_conn_str")
-if use_conn_str:
-    client = pymongo.MongoClient(get_config("connection_string"))
-else:
-    client = pymongo.MongoClient(host, port)
+    client = pymongo.MongoClient(mongodb_host, mongodb_port)
 
 send_context_str = "本次抓取的结果如下：\n"
 

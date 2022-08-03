@@ -8,17 +8,20 @@ from logging.handlers import RotatingFileHandler
 dir = os.path.dirname(__file__)
 dir_time = time.strftime("%Y-%m-%d", time.localtime())
 
-if os.path.exists(dir + "/logs") is False:
-    os.mkdir(dir + "/logs")
+parent_dir = os.path.dirname(dir)
+
+
+if os.path.exists(parent_dir + "/logs") is False:
+    os.mkdir(parent_dir + "/logs")
 
 
 handlers = {
-    logging.NOTSET: os.path.join(dir, "../logs/notset.log"),
-    logging.DEBUG: os.path.join(dir, "../logs/debug.log"),
-    logging.INFO: os.path.join(dir, "../logs/info.log"),
-    logging.WARNING: os.path.join(dir, "../logs/warning.log"),
-    logging.ERROR: os.path.join(dir, "../logs/error.log"),
-    logging.CRITICAL: os.path.join(dir, "../logs/critical.log"),
+    logging.NOTSET: os.path.join(parent_dir, "logs/notset.log"),
+    logging.DEBUG: os.path.join(parent_dir, "logs/debug.log"),
+    logging.INFO: os.path.join(parent_dir, "logs/info.log"),
+    logging.WARNING: os.path.join(parent_dir, "logs/warning.log"),
+    logging.ERROR: os.path.join(parent_dir, "logs/error.log"),
+    logging.CRITICAL: os.path.join(parent_dir, "logs/critical.log"),
 }
 
 

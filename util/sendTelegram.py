@@ -3,7 +3,7 @@ from telebot.types import InputMediaPhoto
 from telebot.util import antiflood
 import time
 from util.log_util import log
-from util.config import get_config
+from util.read_config import get_config
 
 
 bot_token = get_config("tg_bot_token")

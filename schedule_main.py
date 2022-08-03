@@ -3,7 +3,7 @@ import schedule
 import time
 
 from main import main
-from util.config import get_config
+from util.read_config import get_config
 from util.log_util import TNLog
 log = TNLog()
 

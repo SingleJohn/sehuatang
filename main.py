@@ -1,15 +1,13 @@
 import asyncio
-import time
 import httpx
 import bs4
 import re
 
 from util.mongo import save_data, compare_tid, filter_data
-from util.config import get_config
 from util.log_util import log
-from util.sendMessage import SendWeCom
 from util.save_to_mysql import SaveToMysql
 from util.sendTelegram import send_media_group
+from util.config import domain, fid_list, page_num, date, mongodb_enable, mysql_enable, tg_enable, proxy
 
 
 # 获取帖子的id(访问板块)
@@ -23,7 +21,7 @@ async def get_plate_info(fid: int, page: int, proxy: str, date_time: str):
     :return: info_list
     """
     log.info("Crawl the plate " + str(fid) + " page number " + str(page))
-    url = "https://{}/".format(get_config("domain_name"))
+    url = "https://{}/".format(domain)
     # 参数
     params = {
         "mod": "forumdisplay",
@@ -60,7 +58,6 @@ async def get_plate_info(fid: int, page: int, proxy: str, date_time: str):
                     date = date_td_em.get_text()
                 else:
                     continue
-            # print(date)
             if date is None:
                 continue
             id = i.find(class_="showcontent y").attrs["id"].split("_")[1]
@@ -87,7 +84,7 @@ async def get_page(tid, proxy, f_info):
 
     data = {}
     # log.info("Crawl the page " + tid)
-    url = "https://{}/?mod=viewthread&tid={}".format(get_config("domain_name"), tid)
+    url = "https://{}/?mod=viewthread&tid={}".format(domain, tid)
 
     try:
         response = httpx.get(url, proxies=proxy)
@@ -109,13 +106,7 @@ async def get_page(tid, proxy, f_info):
             magnet_115 = next_blockcode.find("li").get_text()
         else:
             magnet_115 = None
-        # 发布时间
-        # post_time = (
-        #     soup.find("img", class_="authicn vm")
-        #     .parent.find("em")
-        #     .find("span")
-        #     .attrs["title"]
-        # )
+
         post_time_em = soup.find("img", class_="authicn vm").parent.find("em")
         post_time_span = post_time_em.find("span")
         if post_time_span is not None:
@@ -137,32 +128,14 @@ async def get_page(tid, proxy, f_info):
 
 
 async def main():
-    # 获取配置
-    config = get_config()
-    fid_list = config["sehuatang"]["fid"]
-    page_num = config["sehuatang"]["page_num"]
-    date_time = config["sehuatang"]["date"]
-    mysql_enable = config["mysql"]["enable"]
-    mongodb_enable = config["mongodb"]["enable"]
 
-    if date_time is None:
-        date_time = time.strftime("%Y-%m-%d", time.localtime())
-    else:
-        date_time = date_time.__str__()
-
-    proxy_enable = config["proxy"]["proxy_enable"]
-    if proxy_enable:
-        proxy = config["proxy"]["proxy_host"]
-    else:
-        proxy = None
-
-    log.debug("日期: " + date_time)
+    log.debug("日期: " + date)
 
     for fid in fid_list:
         tasks = []  # 存放所有的任务
         for page in range(1, page_num + 1):
             tasks.append(
-                get_plate_info(fid, page, proxy, date_time)
+                get_plate_info(fid, page, proxy, date)
             )
         # 开始执行协程
         results = await asyncio.gather(*tasks)
@@ -175,14 +148,15 @@ async def main():
             info_list_all.extend(info_list)
             tid_list_all.extend(tid_list)
         log.info("即将开始爬取的页面 " + " ".join(tid_list_all))
-        info_list_new = []
-        tid_list_new = []
         if mongodb_enable:
             tid_list_new, info_list_new = compare_tid(tid_list_all, fid, info_list_all)
-        if mysql_enable:
+        elif mysql_enable:
             mysql = SaveToMysql()
             tid_list_new, info_list_new = mysql.compare_tid(tid_list_all, fid, info_list_all)
             mysql.close()
+        else:
+            tid_list_new = tid_list_all
+            info_list_new = info_list_all
         log.info("需要爬取的页面 " + " ".join(tid_list_new))
 
         data_list = []
@@ -199,7 +173,7 @@ async def main():
             data["tid"] = i["tid"]
             post_time = data["post_time"]
             # 再次匹配发布时间（因为上级页面获取的时间可能不准确）
-            if re.match("^" + date_time, post_time):
+            if re.match("^" + date, post_time):
                 data_list.append(data)
         log.info("本次抓取的数据条数为：" + str(len(data_list)))
         log.info("开始写入数据库")
@@ -211,17 +185,8 @@ async def main():
         if mongodb_enable:
             data_list_new = filter_data(data_list, fid)
             save_data(data_list_new, fid)
-        if get_config("send_telegram_enable"):
+        if tg_enable:
             send_media_group(data_list, fid)
-
-    if get_config("send_wecom_enable"):
-        send_message()
-
-
-def send_message():
-    wecom = SendWeCom()
-    from util.mongo import get_send_context
-    wecom.send_message("色花堂抓取结果", get_send_context(), "mpnews")
 
 
 if __name__ == "__main__":
