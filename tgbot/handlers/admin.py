@@ -16,7 +16,8 @@ def crawl_plate(message: Message, bot: TeleBot):
     """
     You can create a function and use parameter pass_bot.
     """
-    msg = message.json.get('text').split(' ')[1]
+    msg = message.json.get('text').split(' ').get(1, 0)
+
     # list中的数字转化为字符串
     fid_str = [str(i) for i in fid_list]
     if msg in fid_str:
