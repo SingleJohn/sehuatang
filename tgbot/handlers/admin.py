@@ -28,7 +28,8 @@ def crawl_plate(message: Message, bot: TeleBot):
     fid_str = [str(i) for i in fid_list]
     if fid in fid_str:
         bot.send_message(message.chat.id, "正在爬取...，请稍后")
-        asyncio.run(crawler(int(fid)))
+        rec_msg = asyncio.run(crawler(int(fid)))
+        bot.send_message(message.chat.id, rec_msg)
     else:
         bot.send_message(message.chat.id, "fid不在配置文件中或者格式错误")
 

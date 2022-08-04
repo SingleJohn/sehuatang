@@ -6,7 +6,7 @@ import re
 from util.mongo import save_data, compare_tid, filter_data
 from util.log_util import log
 from util.save_to_mysql import SaveToMysql
-from util.sendTelegram import send_media_group
+from util.sendTelegram import send_media_group, rec_message
 from util.config import domain, fid_list, page_num, date, mongodb_enable, mysql_enable, tg_enable, proxy
 
 
@@ -183,6 +183,10 @@ async def crawler(fid):
         save_data(data_list_new, fid)
     if tg_enable:
         send_media_group(data_list, fid)
+    if len(data_list) > 0:
+        return rec_message(data_list, fid)
+    else:
+        return "没有新的数据"
 
 
 async def main():
