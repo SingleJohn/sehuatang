@@ -43,3 +43,5 @@ if date is None:
     date = time.strftime("%Y-%m-%d", time.localtime())
 else:
     date = date.__str__()
+
+schedule_time = get_config("schedule_time")

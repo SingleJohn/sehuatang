@@ -127,66 +127,69 @@ async def get_page(tid, proxy, f_info):
         log.error(e)
 
 
-async def main():
+async def crawler(fid):
+    tasks = []  # 存放所有的任务
+    for page in range(1, page_num + 1):
+        tasks.append(
+            get_plate_info(fid, page, proxy, date)
+        )
+    # 开始执行协程
+    results = await asyncio.gather(*tasks)
 
+    # 将结果拼接
+    info_list_all = []
+    tid_list_all = []
+    for result in results:
+        info_list, tid_list = result
+        info_list_all.extend(info_list)
+        tid_list_all.extend(tid_list)
+    log.info("即将开始爬取的页面 " + " ".join(tid_list_all))
+    if mongodb_enable:
+        tid_list_new, info_list_new = compare_tid(tid_list_all, fid, info_list_all)
+    elif mysql_enable:
+        mysql = SaveToMysql()
+        tid_list_new, info_list_new = mysql.compare_tid(tid_list_all, fid, info_list_all)
+        mysql.close()
+    else:
+        tid_list_new = tid_list_all
+        info_list_new = info_list_all
+    log.info("需要爬取的页面 " + " ".join(tid_list_new))
+
+    data_list = []
+    tasks = []
+    for i in info_list_new:
+        tasks.append(get_page(i["tid"], proxy, i))
+    results = await asyncio.gather(*tasks)
+    results_new = [i for i in results if i is not None]
+    for result in results_new:
+        data, i = result
+        data["number"] = i["number"]
+        data["title"] = i["title"]
+        data["date"] = i["date"]
+        data["tid"] = i["tid"]
+        post_time = data["post_time"]
+        # 再次匹配发布时间（因为上级页面获取的时间可能不准确）
+        if re.match("^" + date, post_time):
+            data_list.append(data)
+    log.info("本次抓取的数据条数为：" + str(len(data_list)))
+    log.info("开始写入数据库")
+    if mysql_enable:
+        mysql = SaveToMysql()
+        data_list_new = mysql.filter_data(data_list, fid)
+        mysql.save_data(data_list_new, fid)
+        mysql.close()
+    if mongodb_enable:
+        data_list_new = filter_data(data_list, fid)
+        save_data(data_list_new, fid)
+    if tg_enable:
+        send_media_group(data_list, fid)
+
+
+async def main():
     log.debug("日期: " + date)
 
     for fid in fid_list:
-        tasks = []  # 存放所有的任务
-        for page in range(1, page_num + 1):
-            tasks.append(
-                get_plate_info(fid, page, proxy, date)
-            )
-        # 开始执行协程
-        results = await asyncio.gather(*tasks)
-
-        # 将结果拼接
-        info_list_all = []
-        tid_list_all = []
-        for result in results:
-            info_list, tid_list = result
-            info_list_all.extend(info_list)
-            tid_list_all.extend(tid_list)
-        log.info("即将开始爬取的页面 " + " ".join(tid_list_all))
-        if mongodb_enable:
-            tid_list_new, info_list_new = compare_tid(tid_list_all, fid, info_list_all)
-        elif mysql_enable:
-            mysql = SaveToMysql()
-            tid_list_new, info_list_new = mysql.compare_tid(tid_list_all, fid, info_list_all)
-            mysql.close()
-        else:
-            tid_list_new = tid_list_all
-            info_list_new = info_list_all
-        log.info("需要爬取的页面 " + " ".join(tid_list_new))
-
-        data_list = []
-        tasks = []
-        for i in info_list_new:
-            tasks.append(get_page(i["tid"], proxy, i))
-        results = await asyncio.gather(*tasks)
-        results_new = [i for i in results if i is not None]
-        for result in results_new:
-            data, i = result
-            data["number"] = i["number"]
-            data["title"] = i["title"]
-            data["date"] = i["date"]
-            data["tid"] = i["tid"]
-            post_time = data["post_time"]
-            # 再次匹配发布时间（因为上级页面获取的时间可能不准确）
-            if re.match("^" + date, post_time):
-                data_list.append(data)
-        log.info("本次抓取的数据条数为：" + str(len(data_list)))
-        log.info("开始写入数据库")
-        if mysql_enable:
-            mysql = SaveToMysql()
-            data_list_new = mysql.filter_data(data_list, fid)
-            mysql.save_data(data_list_new, fid)
-            mysql.close()
-        if mongodb_enable:
-            data_list_new = filter_data(data_list, fid)
-            save_data(data_list_new, fid)
-        if tg_enable:
-            send_media_group(data_list, fid)
+        await crawler(fid)
 
 
 if __name__ == "__main__":
