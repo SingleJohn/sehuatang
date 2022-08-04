@@ -16,13 +16,19 @@ def crawl_plate(message: Message, bot: TeleBot):
     """
     You can create a function and use parameter pass_bot.
     """
-    msg = message.json.get('text').split(' ').get(1, 0)
+    msg = message.json.get('text').split(' ')
+    # 参数为空时，返回帮助信息
+    if len(msg) != 2:
+        bot.send_message(message.chat.id, "请输入正确的参数，如：/c 103")
+        return
+
+    fid = msg[1]
 
     # list中的数字转化为字符串
     fid_str = [str(i) for i in fid_list]
-    if msg in fid_str:
-        bot.send_message(message.chat.id, msg)
-        asyncio.run(crawler(int(msg)))
+    if fid in fid_str:
+        bot.send_message(message.chat.id, "正在爬取...，请稍后")
+        asyncio.run(crawler(int(fid)))
     else:
         bot.send_message(message.chat.id, "fid不在配置文件中或者格式错误")
 
