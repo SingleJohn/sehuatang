@@ -41,6 +41,6 @@ def read_config(message: Message, bot: TeleBot):
     You can create a function and use parameter pass_bot.
     """
     msg_list = [str(i) + str(j) for i, j in fid_json.items()]
-    msg = ' '.join(msg_list)
+    msg = '\n'.join(msg_list)
     bot.send_message(message.chat.id, msg)
 
