@@ -1,6 +1,6 @@
 from telebot import TeleBot
 from telebot.types import Message
-from util.config import fid_list
+from util.config import fid_list, fid_json
 from main import crawler
 import asyncio
 
@@ -34,4 +34,8 @@ def crawl_plate(message: Message, bot: TeleBot):
         bot.send_message(message.chat.id, "fid不在配置文件中或者格式错误")
 
 
-
+def get_config(message: Message, bot: TeleBot):
+    """
+    You can create a function and use parameter pass_bot.
+    """
+    bot.send_message(message.chat.id, fid_json)
