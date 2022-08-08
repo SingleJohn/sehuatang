@@ -10,7 +10,7 @@ def admin_user(message: Message, bot: TeleBot):
     You can create a function and use parameter pass_bot.
     """
     bot.send_message(message.chat.id, "Hello, admin!")
-    rec_msg = "命令菜单：\n /start 开始 \n /c fid - 爬取指定fid的板块信息\n"
+    rec_msg = "命令菜单：\n /start 开始 \n /c fid - 爬取指定fid的板块信息\n /config - 读取配置文件\n"
     bot.send_message(message.chat.id, parse_mode="markdown", text=rec_msg)
 
 
@@ -40,4 +40,7 @@ def read_config(message: Message, bot: TeleBot):
     """
     You can create a function and use parameter pass_bot.
     """
-    bot.send_message(message.chat.id, fid_json.to_json().tostring())
+    msg_list = [str(i) + str(j) for i, j in fid_json.items()]
+    msg = ' '.join(msg_list)
+    bot.send_message(message.chat.id, msg)
+
