@@ -2,7 +2,7 @@
 from tgbot.filters.admin_filter import AdminFilter
 
 # handlers
-from tgbot.handlers.admin import admin_user, crawl_plate
+from tgbot.handlers.admin import admin_user, crawl_plate, get_config
 from tgbot.handlers.spam_command import anti_spam
 from tgbot.handlers.user import any_user
 
@@ -26,6 +26,8 @@ from util.config import proxy
 
 # remove this if you won't use middlewares:
 from telebot import apihelper
+
+from util.read_config import get_config
 apihelper.ENABLE_MIDDLEWARE = True
 if proxy is not None:
     apihelper.proxy = {
@@ -42,6 +44,7 @@ def register_handlers():
     # bot.register_message_handler(any_user, commands=['start'], admin=False, pass_bot=True)
     # bot.register_message_handler(anti_spam, commands=['spam'], pass_bot=True)
     bot.register_message_handler(crawl_plate, commands=['c'], admin=True, pass_bot=True)
+    bot.register_message_handler(get_config, commands=['get_config'], admin=False, pass_bot=True)
 
 
 register_handlers()
