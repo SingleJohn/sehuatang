@@ -29,7 +29,7 @@ from telebot import apihelper
 
 from util.read_config import get_config
 apihelper.ENABLE_MIDDLEWARE = True
-proxy = None
+
 if proxy is not None:
     apihelper.proxy = {
         'http': proxy,
