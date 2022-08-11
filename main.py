@@ -2,6 +2,7 @@ import asyncio
 import httpx
 import bs4
 import re
+import time
 
 from util.mongo import save_data, compare_tid, filter_data
 from util.log_util import log
@@ -33,7 +34,9 @@ async def get_plate_info(fid: int, page: int, proxy: str, date_time: str):
     info_list = []
     tid_list = []
 
-    response = httpx.get(url, params=params, proxies=proxy)
+    # response = httpx.get(url, params=params, proxies=proxy)
+    async with httpx.AsyncClient(proxies=proxy) as client:
+        response = await client.get(url, params=params)
     # 使用bs4解析
     soup = bs4.BeautifulSoup(response.text, "html.parser")
     # print(soup)
@@ -87,7 +90,10 @@ async def get_page(tid, proxy, f_info):
     url = "https://{}/?mod=viewthread&tid={}".format(domain, tid)
 
     try:
-        response = httpx.get(url, proxies=proxy)
+        # response = httpx.get(url, proxies=proxy)
+        async with httpx.AsyncClient(proxies=proxy) as client:
+            response = await client.get(url)
+
         soup = bs4.BeautifulSoup(response.text, "html.parser")
         # log.warning("Crawl the soup " + soup)
         # 获取帖子的标题
@@ -129,12 +135,15 @@ async def get_page(tid, proxy, f_info):
 
 async def crawler(fid):
     tasks = []  # 存放所有的任务
+    start_time = time.time()
     for page in range(1, page_num + 1):
         tasks.append(
             get_plate_info(fid, page, proxy, date)
         )
     # 开始执行协程
     results = await asyncio.gather(*tasks)
+    end_time = time.time()
+    log.info("get_plate_info 执行时间：" + str(end_time - start_time))
 
     # 将结果拼接
     info_list_all = []
@@ -158,9 +167,12 @@ async def crawler(fid):
 
     data_list = []
     tasks = []
+    start_time = time.time()
     for i in info_list_new:
         tasks.append(get_page(i["tid"], proxy, i))
     results = await asyncio.gather(*tasks)
+    end_time = time.time()
+    log.info("get_page 执行时间：" + str(end_time - start_time))
     results_new = [i for i in results if i is not None]
     for result in results_new:
         data, i = result
