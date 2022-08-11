@@ -145,6 +145,7 @@ async def crawler(fid):
         tid_list_all.extend(tid_list)
     log.info("即将开始爬取的页面 " + " ".join(tid_list_all))
     if mongodb_enable:
+        log.info("mongodb_enable is True")
         tid_list_new, info_list_new = compare_tid(tid_list_all, fid, info_list_all)
     elif mysql_enable:
         mysql = SaveToMysql()

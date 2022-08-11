@@ -97,6 +97,8 @@ def compare_data(data_list, id_list):
 def compare_tid(tid_list, fid, info_list):
     collection_name = get_plate_name(fid)
     id_list = find_data_tid(collection_name, date)
+    log.info("collection_name: {}".format(collection_name))
+    log.info("mongodb 查询到{}条数据".format(id_list))
 
     tid_list_new = []
     for i in tid_list:
