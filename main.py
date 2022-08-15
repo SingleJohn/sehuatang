@@ -138,7 +138,7 @@ async def crawler(fid):
     start_time = time.time()
     for page in range(1, page_num + 1):
         tasks.append(
-            get_plate_info(fid, page, proxy, date)
+            get_plate_info(fid, page, proxy, date())
         )
     # 开始执行协程
     results = await asyncio.gather(*tasks)
@@ -182,7 +182,7 @@ async def crawler(fid):
         data["tid"] = i["tid"]
         post_time = data["post_time"]
         # 再次匹配发布时间（因为上级页面获取的时间可能不准确）
-        if re.match("^" + date, post_time):
+        if re.match("^" + date(), post_time):
             data_list.append(data)
     log.info("本次抓取的数据条数为：" + str(len(data_list)))
     log.info("开始写入数据库")
