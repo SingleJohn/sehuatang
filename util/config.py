@@ -38,7 +38,6 @@ tg_bot_token = send_msg.get('tg_bot_token')
 tg_chat_id = send_msg.get('tg_chat_id')
 
 
-@property
 def date():
     date_time = get_config("date")
     if date_time is None:

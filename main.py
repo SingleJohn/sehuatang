@@ -12,7 +12,7 @@ from util.config import domain, fid_list, page_num, date, mongodb_enable, mysql_
 
 
 # 获取帖子的id(访问板块)
-async def get_plate_info(fid: int, page: int, proxy: str, date_time: str):
+async def get_plate_info(fid: int, page: int, proxy: str, date_time):
     """
     :param fid: 板块id
     :param page: 页码
@@ -203,7 +203,7 @@ async def crawler(fid):
 
 
 async def main():
-    log.debug(f"日期: {date}")
+    log.debug(f"日期: {date()}")
 
     for fid in fid_list:
         await crawler(fid)

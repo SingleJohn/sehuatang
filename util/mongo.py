@@ -59,7 +59,7 @@ def save_data(data_list, fid):
 
 def filter_data(data_list, fid):     # 过滤数据
     collection_name = get_plate_name(fid)
-    tid_list = find_data_tid(collection_name, date)
+    tid_list = find_data_tid(collection_name, date())
     data_list_new = compare_data(data_list, tid_list)
     return data_list_new
 
@@ -97,7 +97,7 @@ def compare_data(data_list, id_list):
 # 筛选不存在的tids
 def compare_tid(tid_list, fid, info_list):
     collection_name = get_plate_name(fid)
-    id_list = find_data_tid(collection_name, date)
+    id_list = find_data_tid(collection_name, date())
     log.info("collection_name: {}".format(collection_name))
     log.info("mongodb 查询到{}条数据".format(id_list))
 
