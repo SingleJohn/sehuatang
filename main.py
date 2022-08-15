@@ -203,7 +203,7 @@ async def crawler(fid):
 
 
 async def main():
-    log.debug("日期: " + date)
+    log.debug(f"日期: {date}")
 
     for fid in fid_list:
         await crawler(fid)

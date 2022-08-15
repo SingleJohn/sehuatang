@@ -38,10 +38,14 @@ tg_bot_token = send_msg.get('tg_bot_token')
 tg_chat_id = send_msg.get('tg_chat_id')
 
 
-date = get_config("date")
-if date is None:
-    date = time.strftime("%Y-%m-%d", time.localtime())
-else:
-    date = date.__str__()
+@property
+def date():
+    date_time = get_config("date")
+    if date_time is None:
+        date_time = time.strftime("%Y-%m-%d", time.localtime())
+    else:
+        date_time = date_time.__str__()
+    return date_time
+
 
 schedule_time = get_config("schedule_time")

@@ -72,6 +72,7 @@ def find_data_tid(collection_name, date):
     collection = db[collection_name]
     # 构造查询条件
     query = {"post_time": {"$regex": "^" + date}}
+    log.info("mongodb 查询条件: {}, collection_name: {}".format(query, collection_name))
     # 查询数据, 返回指定的字段
     res = collection.find(query, {"_id": 0, "date": 1, "tid": 1})
     # 将查询结果中的id提取出来
