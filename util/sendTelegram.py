@@ -3,11 +3,13 @@ from telebot.types import InputMediaPhoto
 from telebot.util import antiflood
 import time
 from util.log_util import log
-from util.read_config import get_config
-from util.config import tg_bot_token, tg_chat_id, fid_json
+from util.config import tg_bot_token, tg_chat_id, fid_json, tg_enable
 
-
-bot = telebot.TeleBot(tg_bot_token)
+if tg_enable:
+    bot = telebot.TeleBot(tg_bot_token)
+else:
+    bot = None
+    log.info("telegram bot is disabled")
 
 
 def special_char_sub(text):
