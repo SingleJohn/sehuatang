@@ -1,10 +1,17 @@
 # 色花堂BT区页面爬取脚本
 
+v2 版本使用说明
+- 增加了tgbot远程控制功能（`bot.py` 需要保持后台运行，具体效果可参考：[tgbot](effect%20picture/tgbot)）
+  - 需要在 `tgbot/models/users_model.py` 中设置管理员的id
+- 配置文件中的fid配置项格式修改，冒号后面为tg的发送标签
+- 修正了一些问题
+
+其他功能请参照下方说明（与v1版一致）
+
 1. 使用方式
    1. `pip install -r requirements.txt` 安装依赖
    2. 将 `config_bak.yaml` 文件改为 `config.yaml`
    3. 修改配置项，运行 `main.py` 即可
-
 
 2. 目前实现的功能
    - 按板块抓取指定日期的信息
