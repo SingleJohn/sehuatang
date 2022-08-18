@@ -34,7 +34,6 @@ async def get_plate_info(fid: int, page: int, proxy: str, date_time):
     info_list = []
     tid_list = []
 
-    # response = httpx.get(url, params=params, proxies=proxy)
     async with httpx.AsyncClient(proxies=proxy) as client:
         response = await client.get(url, params=params)
     # 使用bs4解析
@@ -86,16 +85,13 @@ async def get_page(tid, proxy, f_info):
     """
 
     data = {}
-    # log.info("Crawl the page " + tid)
     url = "https://{}/?mod=viewthread&tid={}".format(domain, tid)
 
     try:
-        # response = httpx.get(url, proxies=proxy)
         async with httpx.AsyncClient(proxies=proxy) as client:
             response = await client.get(url)
 
         soup = bs4.BeautifulSoup(response.text, "html.parser")
-        # log.warning("Crawl the soup " + soup)
         # 获取帖子的标题
         title = soup.find("h1", class_="ts").find("span").get_text()
         # 楼主发布的内容
@@ -134,12 +130,9 @@ async def get_page(tid, proxy, f_info):
 
 
 async def crawler(fid):
-    tasks = []  # 存放所有的任务
+
     start_time = time.time()
-    for page in range(1, page_num + 1):
-        tasks.append(
-            get_plate_info(fid, page, proxy, date())
-        )
+    tasks = [get_plate_info(fid, page, proxy, date()) for page in range(1, page_num + 1)]
     # 开始执行协程
     results = await asyncio.gather(*tasks)
     end_time = time.time()
@@ -166,10 +159,8 @@ async def crawler(fid):
     log.info("需要爬取的页面 " + " ".join(tid_list_new))
 
     data_list = []
-    tasks = []
     start_time = time.time()
-    for i in info_list_new:
-        tasks.append(get_page(i["tid"], proxy, i))
+    tasks = [get_page(i["tid"], proxy, i) for i in info_list_new]
     results = await asyncio.gather(*tasks)
     end_time = time.time()
     log.info("get_page 执行时间：" + str(end_time - start_time))
@@ -210,9 +201,6 @@ async def main():
 
 
 if __name__ == "__main__":
-    # main()
-    # 随机延时
-    # time.sleep(random.randint(10, 300))
     asyncio.run(main())
     # asyncio.get_event_loop().run_until_complete(main())
     # get_plate_info("103", 5, "http://127.0.0.1:11223", "2022-03")
