@@ -79,12 +79,12 @@ def send_media_group(data_list, fid):
                 media_group.append(InputMediaPhoto(media=image, caption=content, parse_mode="markdownV2"))
             else:
                 media_group.append(InputMediaPhoto(media=image))
-        antiflood(bot.send_media_group, chat_id=tg_chat_id, media=media_group)
-        log.debug(f"send_media_group: {content}")
+        msg = antiflood(bot.send_media_group, chat_id=tg_chat_id, media=media_group)
+        log.debug(f"send_media_group, msg:  {msg}")
     if len(data_list) > 0:
         send_message_text = rec_message(data_list, fid)
-        antiflood(bot.send_message, chat_id=tg_chat_id, text=send_message_text)
-        log.info(f"send telegram message success: {send_message_text}")
+        msg = antiflood(bot.send_message, chat_id=tg_chat_id, text=send_message_text)
+        log.info(f"send telegram message, return msg: {msg}")
 
 
 def rec_message(data_list, fid):

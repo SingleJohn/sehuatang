@@ -202,7 +202,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-    # asyncio.get_event_loop().run_until_complete(main())
-    # get_plate_info("103", 5, "http://127.0.0.1:11223", "2022-03")
-    # get_page("819398", "http://127.0.0.1:11223", 2333)
 
