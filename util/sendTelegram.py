@@ -1,12 +1,18 @@
 import telebot
 from telebot.types import InputMediaPhoto
 from telebot.util import antiflood
+from telebot import apihelper
 import time
 from util.log_util import log
-from util.config import tg_bot_token, tg_chat_id, fid_json, tg_enable
+from util.config import tg_bot_token, tg_chat_id, fid_json, tg_enable, proxy
 
 if tg_enable:
     bot = telebot.TeleBot(tg_bot_token)
+    if proxy is not None:
+        apihelper.proxy = {
+            'http': proxy,
+            'https': proxy,
+        }
 else:
     bot = None
     log.info("telegram bot is disabled")
