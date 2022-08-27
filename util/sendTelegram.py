@@ -90,7 +90,7 @@ def send_media_group(data_list, fid):
     if len(data_list) > 0:
         send_message_text = rec_message(data_list, fid)
         msg = antiflood(bot.send_message, chat_id=tg_chat_id, text=send_message_text)
-        log.info(f"send telegram message, return msg: {msg}")
+        log.info(f"send telegram message, return msg: {msg.json}")
 
 
 def rec_message(data_list, fid):
