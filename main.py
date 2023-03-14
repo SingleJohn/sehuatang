@@ -8,7 +8,16 @@ from util.mongo import save_data, compare_tid, filter_data
 from util.log_util import log
 from util.save_to_mysql import SaveToMysql
 from util.sendTelegram import send_media_group, rec_message
-from util.config import domain, fid_list, page_num, date, mongodb_enable, mysql_enable, tg_enable, proxy
+from util.config import (
+    domain,
+    fid_list,
+    page_num,
+    date,
+    mongodb_enable,
+    mysql_enable,
+    tg_enable,
+    proxy,
+)
 
 
 # 获取帖子的id(访问板块)
@@ -103,7 +112,9 @@ async def get_page(tid, proxy, f_info):
         # 磁力链接
         magnet = soup.find("div", class_="blockcode").find("li").get_text()
         # 查找下一个blockcode
-        next_blockcode = soup.find("div", class_="blockcode").find_next("div", class_="blockcode")
+        next_blockcode = soup.find("div", class_="blockcode").find_next(
+            "div", class_="blockcode"
+        )
         if next_blockcode is not None:
             magnet_115 = next_blockcode.find("li").get_text()
         else:
@@ -132,7 +143,9 @@ async def get_page(tid, proxy, f_info):
 async def crawler(fid):
 
     start_time = time.time()
-    tasks = [get_plate_info(fid, page, proxy, date()) for page in range(1, page_num + 1)]
+    tasks = [
+        get_plate_info(fid, page, proxy, date()) for page in range(1, page_num + 1)
+    ]
     # 开始执行协程
     results = await asyncio.gather(*tasks)
     end_time = time.time()
@@ -151,7 +164,9 @@ async def crawler(fid):
         tid_list_new, info_list_new = compare_tid(tid_list_all, fid, info_list_all)
     elif mysql_enable:
         mysql = SaveToMysql()
-        tid_list_new, info_list_new = mysql.compare_tid(tid_list_all, fid, info_list_all)
+        tid_list_new, info_list_new = mysql.compare_tid(
+            tid_list_all, fid, info_list_all
+        )
         mysql.close()
     else:
         tid_list_new = tid_list_all
@@ -202,4 +217,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-

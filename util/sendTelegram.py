@@ -10,8 +10,8 @@ if tg_enable:
     bot = telebot.TeleBot(tg_bot_token)
     if proxy is not None:
         apihelper.proxy = {
-            'http': proxy,
-            'https': proxy,
+            "http": proxy,
+            "https": proxy,
         }
 else:
     bot = None
@@ -20,45 +20,45 @@ else:
 
 def special_char_sub(text):
     old_strs = [
-            "_",
-            "*",
-            "[",
-            "]",
-            "(",
-            ")",
-            "~",
-            "`",
-            ">",
-            "#",
-            "+",
-            "-",
-            "=",
-            "|",
-            "{",
-            "}",
-            ".",
-            "!",
-        ]
+        "_",
+        "*",
+        "[",
+        "]",
+        "(",
+        ")",
+        "~",
+        "`",
+        ">",
+        "#",
+        "+",
+        "-",
+        "=",
+        "|",
+        "{",
+        "}",
+        ".",
+        "!",
+    ]
     new_strs = [
-            "\_",
-            "\*",
-            "\[",
-            "\]",
-            "\(",
-            "\)",
-            "\~",
-            "\`",
-            "\>",
-            "\#",
-            "\+",
-            "\-",
-            "\=",
-            "\|",
-            "\{",
-            "\}",
-            "\.",
-            "\!",
-        ]
+        "\_",
+        "\*",
+        "\[",
+        "\]",
+        "\(",
+        "\)",
+        "\~",
+        "\`",
+        "\>",
+        "\#",
+        "\+",
+        "\-",
+        "\=",
+        "\|",
+        "\{",
+        "\}",
+        "\.",
+        "\!",
+    ]
     for i in range(len(old_strs)):
         text = text.replace(old_strs[i], new_strs[i])
     return text
@@ -82,16 +82,22 @@ def send_media_group(data_list, fid):
         for image in image_list:
             index = image_list.index(image)
             if index == len(image_list) - 1:
-                media_group.append(InputMediaPhoto(media=image, caption=content, parse_mode="markdownV2"))
+                media_group.append(
+                    InputMediaPhoto(
+                        media=image, caption=content, parse_mode="markdownV2"
+                    )
+                )
             else:
                 media_group.append(InputMediaPhoto(media=image))
         msg = antiflood(bot.send_media_group, chat_id=tg_chat_id, media=media_group)
         try:
-            log.info(f"send_media_group, msg id: {' '.join([str(i.json.get('message_id')) for i in msg])}")
+            log.info(
+                f"send_media_group, msg id: {' '.join([str(i.json.get('message_id')) for i in msg])}"
+            )
         except Exception as e:
-            log.debug(media_group)
-            log.debug(msg)
-            log.error(e)
+            log.error("media group is " + media_group)
+            log.error(f"msg is {msg}")
+            log.error(f"error is {e}")
 
     if len(data_list) > 0:
         send_message_text = rec_message(data_list, fid)
@@ -109,8 +115,5 @@ def rec_message(data_list, fid):
     return send_message_text
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass
-
-
-
