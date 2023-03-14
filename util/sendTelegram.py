@@ -95,8 +95,8 @@ def send_media_group(data_list, fid):
                 f"send_media_group, msg id: {' '.join([str(i.json.get('message_id')) for i in msg])}"
             )
         except Exception as e:
-            log.error("media group is " + media_group)
-            log.error(f"msg is {msg}")
+            log.error("media group is " + "".join(media_group))
+            log.error("msg is " + "".join(msg))
             log.error(f"error is {e}")
 
     if len(data_list) > 0:
