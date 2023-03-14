@@ -42,8 +42,6 @@ bot = TeleBot(config.TOKEN, num_threads=5)
 
 def register_handlers():
     bot.register_message_handler(admin_user, commands=['start'], admin=True, pass_bot=True)
-    # bot.register_message_handler(any_user, commands=['start'], admin=False, pass_bot=True)
-    # bot.register_message_handler(anti_spam, commands=['spam'], pass_bot=True)
     bot.register_message_handler(crawl_plate, commands=['c'], admin=True, pass_bot=True)
     bot.register_message_handler(read_config, commands=['config'], admin=True, pass_bot=True)
 

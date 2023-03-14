@@ -3,6 +3,7 @@
 __pycache__/
 logs/
 dist/
+venv/
 build/
 *.spec
 *.html
