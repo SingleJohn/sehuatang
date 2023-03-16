@@ -16,6 +16,7 @@ mysql:
 sehuatang:
   # 域名
   domain_name: www.sehuatang.org
+  cookie: "***********"
   # 板块id
   fid:
     103: 高清中文字幕

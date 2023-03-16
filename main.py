@@ -10,6 +10,7 @@ from util.save_to_mysql import SaveToMysql
 from util.sendTelegram import send_media_group, rec_message
 from util.config import (
     domain,
+    cookie,
     fid_list,
     page_num,
     date,
@@ -32,6 +33,10 @@ async def get_plate_info(fid: int, page: int, proxy: str, date_time):
     """
     log.info("Crawl the plate " + str(fid) + " page number " + str(page))
     url = "https://{}/".format(domain)
+    # headers
+    headers = {
+        "cookie": cookie,
+    }
     # 参数
     params = {
         "mod": "forumdisplay",
@@ -44,7 +49,7 @@ async def get_plate_info(fid: int, page: int, proxy: str, date_time):
     tid_list = []
 
     async with httpx.AsyncClient(proxies=proxy) as client:
-        response = await client.get(url, params=params)
+        response = await client.get(url, params=params, headers=headers)
     # 使用bs4解析
     soup = bs4.BeautifulSoup(response.text, "html.parser")
     # print(soup)
@@ -95,10 +100,14 @@ async def get_page(tid, proxy, f_info):
 
     data = {}
     url = "https://{}/?mod=viewthread&tid={}".format(domain, tid)
+    # headers
+    headers = {
+        "cookie": cookie,
+    }
 
     try:
         async with httpx.AsyncClient(proxies=proxy) as client:
-            response = await client.get(url)
+            response = await client.get(url, headers=headers)
 
         soup = bs4.BeautifulSoup(response.text, "html.parser")
         # 获取帖子的标题

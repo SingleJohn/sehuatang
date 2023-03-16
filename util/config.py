@@ -18,6 +18,7 @@ mysql_passwd = mysql.get('password')
 mysql_db = mysql.get('db')
 
 domain = get_config('domain_name')
+cookie = get_config('cookie')
 fid_json = get_config('fid')
 fid_list = [key for key in fid_json]
 fid_value_list = [fid_json[key] for key in fid_json]
