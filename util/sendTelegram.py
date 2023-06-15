@@ -1,4 +1,5 @@
 import telebot
+import re
 from telebot.types import InputMediaPhoto
 from telebot.util import antiflood
 from telebot import apihelper
@@ -81,11 +82,13 @@ def send_media_group(data_list, fid):
         media_group = []
         for image in image_list:
             index = image_list.index(image)
-            image = image.replace("xms45.com", "sht-xms45.singlelovely.tk")
-            image = image.replace("tupd.xsmy54s.com", "sht-xsmy54s.singlelovely.tk")
-            image = image.replace("xksm54s.com", "sht-xsmy54s.singlelovely.tk")
-            image = image.replace("ej22g.com", "sht-xsmy54s.singlelovely.tk")
-            image = image.replace("www.98tuch.net", "sht-xsmy54s.singlelovely.tk")
+            #
+            # url: https://ej22g.com/tupian/forum/202208/05/173738i38i6j2922icz39j.jpg
+            # 使用正则表达式替换域名部分为sht-xsmy54s.singlelovely.tk
+
+            pattern = r"(https?://[^/]+)/tupian"
+            new_domain = "sht-xsmy54s.singlelovely.tk"
+            image = re.sub(pattern, rf"\1/{new_domain}/tupian", image)
 
             if index == len(image_list) - 1:
                 media_group.append(
