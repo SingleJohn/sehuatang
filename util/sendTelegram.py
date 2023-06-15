@@ -98,6 +98,7 @@ def send_media_group(data_list, fid):
                 )
             else:
                 media_group.append(InputMediaPhoto(media=image))
+        log.debug(f"media_group: {media_group}")
         msg = antiflood(bot.send_media_group, chat_id=tg_chat_id, media=media_group)
         try:
             log.info(
