@@ -84,6 +84,9 @@ def send_media_group(data_list, fid):
             image = image.replace("xms45.com", "sht-xms45.singlelovely.tk")
             image = image.replace("tupd.xsmy54s.com", "sht-xsmy54s.singlelovely.tk")
             image = image.replace("xksm54s.com", "sht-xsmy54s.singlelovely.tk")
+            image = image.replace("ej22g.com", "sht-xsmy54s.singlelovely.tk")
+            image = image.replace("www.98tuch.net", "sht-xsmy54s.singlelovely.tk")
+
             if index == len(image_list) - 1:
                 media_group.append(
                     InputMediaPhoto(
