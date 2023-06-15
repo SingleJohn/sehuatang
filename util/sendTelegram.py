@@ -89,6 +89,7 @@ def send_media_group(data_list, fid):
             pattern = r"(https?://[^/]+)/tupian"
             new_domain = "sht-xsmy54s.singlelovely.tk"
             image = re.sub(pattern, rf"\1/{new_domain}/tupian", image)
+            log.debug(image)
 
             if index == len(image_list) - 1:
                 media_group.append(
@@ -98,7 +99,7 @@ def send_media_group(data_list, fid):
                 )
             else:
                 media_group.append(InputMediaPhoto(media=image))
-        log.debug(f"media_group: {media_group}")
+        log.debug(media_group.values().__str__())
         msg = antiflood(bot.send_media_group, chat_id=tg_chat_id, media=media_group)
         try:
             log.info(
