@@ -86,9 +86,9 @@ def send_media_group(data_list, fid):
             # url: https://ej22g.com/tupian/forum/202208/05/173738i38i6j2922icz39j.jpg
             # 使用正则表达式替换域名部分为sht-xsmy54s.singlelovely.tk
 
-            pattern = r"(https?://[^/]+)/tupian"
-            new_domain = "sht-xsmy54s.singlelovely.tk"
-            image = re.sub(pattern, rf"\1/{new_domain}/tupian", image)
+            pattern = r"(https?://)([^/]+)/tupian"
+            new_domain = "https://sht-xsmy54s.singlelovely.tk"
+            image = re.sub(pattern, rf"{new_domain}/tupian", image)
             log.debug(image)
 
             if index == len(image_list) - 1:
