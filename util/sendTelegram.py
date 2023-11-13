@@ -5,7 +5,14 @@ from telebot.util import antiflood
 from telebot import apihelper
 import time
 from util.log_util import log
-from util.config import tg_bot_token, tg_chat_id, fid_json, tg_enable, proxy
+from util.config import (
+    tg_bot_token,
+    tg_chat_id,
+    fid_json,
+    tg_enable,
+    proxy,
+    image_proxy_url,
+)
 
 if tg_enable:
     bot = telebot.TeleBot(tg_bot_token)
@@ -87,7 +94,7 @@ def send_media_group(data_list, fid):
             # 使用正则表达式替换域名部分为sht-xsmy54s.singlelovely.tk
 
             pattern = r"(https?://)([^/]+)/tupian"
-            new_domain = "https://sht-xsmy54s.singlelovely.tk"
+            new_domain = image_proxy_url
             image = re.sub(pattern, rf"{new_domain}/tupian", image)
             log.debug(image)
 

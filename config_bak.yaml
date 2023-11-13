@@ -16,7 +16,7 @@ mysql:
 sehuatang:
   # 域名
   domain_name: www.sehuatang.org
-  cookie: "***********"
+  cookie: "cPNj**************; _safe=***********************************"
   # 板块id
   fid:
     103: 高清中文字幕
@@ -60,6 +60,8 @@ sendMessage:
   send_telegram_enable: true
   tg_bot_token: 5307***************************o2Zw
   tg_chat_id: -7*********6
+  # 图片代理地址（官方的图片域名套了Cloudflare，会导致tg无法解析）
+  image_proxy_url: https://************
 
 # 定时任务
 schedule_time:
