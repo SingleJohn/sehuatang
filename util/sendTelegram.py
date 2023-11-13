@@ -89,9 +89,6 @@ def send_media_group(data_list, fid):
         media_group = []
         for image in image_list:
             index = image_list.index(image)
-            #
-            # url: https://ej22g.com/tupian/forum/202208/05/173738i38i6j2922icz39j.jpg
-            # 使用正则表达式替换域名部分为sht-xsmy54s.singlelovely.tk
 
             pattern = r"(https?://)([^/]+)/tupian"
             new_domain = image_proxy_url
@@ -106,7 +103,7 @@ def send_media_group(data_list, fid):
                 )
             else:
                 media_group.append(InputMediaPhoto(media=image))
-        # log.debug(media_group.values().__str__())
+
         msg = antiflood(bot.send_media_group, chat_id=tg_chat_id, media=media_group)
         try:
             log.info(
